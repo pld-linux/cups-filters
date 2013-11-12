@@ -3,7 +3,7 @@
 Summary:	OpenPrinting CUPS filters and backends
 Name:		cups-filters
 Version:	1.0.41
-Release:	2
+Release:	3
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -181,7 +181,7 @@ fi
 
 %files libs
 %defattr(644,root,root,755)
-%doc __doc/COPYING fontembed/README
+%doc fontembed/README
 %attr(755,root,root) %{_libdir}/libcupsfilters.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libcupsfilters.so.1
 %attr(755,root,root) %{_libdir}/libfontembed.so.*.*.*
