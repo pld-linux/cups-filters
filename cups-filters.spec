@@ -3,7 +3,7 @@
 Summary:	OpenPrinting CUPS filters and backends
 Name:		cups-filters
 Version:	1.0.41
-Release:	1
+Release:	2
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -24,7 +24,7 @@ BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	avahi-devel
 BuildRequires:	avahi-glib-devel
-BuildRequires:	cups-devel
+BuildRequires:	cups-devel >= 1:1.6.0
 BuildRequires:	dbus-devel
 BuildRequires:	fontconfig-devel
 BuildRequires:	freetype-devel
