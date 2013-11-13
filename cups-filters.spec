@@ -1,9 +1,7 @@
-%define		_cups_serverbin		%(/usr/bin/cups-config --serverbin)
-
 Summary:	OpenPrinting CUPS filters and backends
 Name:		cups-filters
 Version:	1.0.41
-Release:	3
+Release:	4
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -39,6 +37,7 @@ BuildRequires:	poppler-cpp-devel
 BuildRequires:	poppler-devel
 BuildRequires:	poppler-progs
 BuildRequires:	python-pycups
+BuildRequires:	rpmbuild(macros) >= 1.671
 BuildRequires:	qpdf-devel
 BuildRequires:	systemd
 BuildRequires:	zlib-devel
@@ -50,18 +49,11 @@ Requires:	poppler-progs
 Requires:	bc
 Requires:	grep
 Requires:	sed
-Obsoletes:	cups-php < 1:1.6.0-1
-# Don't Provide it because we don't build the php module
-#Provides:	cups-php = 1:1.6.0-1
-# Ghostscript CUPS filters live here since Ghostscript 9.08.
 Provides:	ghostscript-cups = 9.08
 Obsoletes:	ghostscript-cups < 9.08
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-# cups-browsed
-Requires(post):	systemd
-Requires(preun):	systemd
-Requires(postun):	systemd
+%define		_cups_serverbin		%(/usr/bin/cups-config --serverbin)
 
 %package libs
 Summary:	OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
@@ -93,11 +85,49 @@ backends.
 %package -n cups-browsed
 Summary:	A daemon for browsing the Bonjour broadcasts of shared, remote CUPS printers
 Group:		Applications/Printing
+Requires(post,preun,postun):	systemd-units
 Requires:	cups-filters-libs = %{version}-%{release}
+Requires:	systemd-units >= 38
 
 %description -n cups-browsed
 A daemon for browsing the Bonjour broadcasts of shared,
 remote CUPS printers.
+
+%package -n cups-backend-serial
+Summary:	Serial port backend for CUPS
+Summary(pl.UTF-8):	Backend obsługujący porty szeregowe dla CUPS-a
+# must be larger than cups.spec
+Epoch:		2
+License:	GPL v2 + openssl exception
+Group:		Applications/Printing
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description -n cups-backend-serial
+This package allow CUPS printing on printers connected by serial
+ports.
+
+%description -n cups-backend-serial -l pl.UTF-8
+Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach
+podłączonych do portów szeregowych.
+
+%package -n cups-backend-parallel
+Summary:	Parallel port backend for CUPS
+Summary(pl.UTF-8):	Backend obsługujący porty równoległe dla CUPS-a
+# must be larger than cups.spec
+Epoch:		2
+License:	GPL v2 + openssl exception
+Group:		Applications/Printing
+Requires:	%{name} = %{epoch}:%{version}-%{release}
+
+%description -n cups-backend-parallel
+This package allow CUPS printing on printers connected by parallel
+ports.
+
+%description -n cups-backend-parallel -l pl.UTF-8
+Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach
+podłączonych do portów równoległych.
+
+# CREATE ANY NEW PACKAGES BEFORE cups-backend-* (EPOCH)
 
 %prep
 %setup -q
@@ -167,8 +197,6 @@ fi
 %doc README AUTHORS NEWS
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
 %attr(755,root,root) %{_cups_serverbin}/filter/*
-%attr(755,root,root) %{_cups_serverbin}/backend/parallel
-%attr(755,root,root) %{_cups_serverbin}/backend/serial
 %{_datadir}/cups/banners
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data/*
@@ -204,3 +232,11 @@ fi
 %{systemdunitdir}/cups-browsed.service
 %{_mandir}/man8/cups-browsed.8*
 %{_mandir}/man5/cups-browsed.conf.5*
+
+%files -n cups-backend-serial
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_cups_serverbin}/backend/serial
+
+%files -n cups-backend-parallel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_cups_serverbin}/backend/parallel
