@@ -1,7 +1,7 @@
 Summary:	OpenPrinting CUPS filters and backends
 Name:		cups-filters
 Version:	1.0.41
-Release:	5
+Release:	6
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -199,7 +199,7 @@ fi
 %attr(755,root,root) %{_cups_serverbin}/filter/*
 %{_datadir}/cups/banners
 %{_datadir}/cups/charsets
-%{_datadir}/cups/data/*
+%{_datadir}/cups/data/*.pdf
 # this needs to be in the main package because of cupsfilters.drv
 %{_datadir}/cups/ppdc/pcl.h
 %{_datadir}/cups/drv/cupsfilters.drv
