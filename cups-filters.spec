@@ -1,7 +1,7 @@
 Summary:	OpenPrinting CUPS filters and backends
 Name:		cups-filters
 Version:	1.0.41
-Release:	7
+Release:	8
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -44,6 +44,7 @@ BuildRequires:	zlib-devel
 # Testing font for test scripts.
 #BuildRequires:	dejavu-sans-fonts
 Requires:	cups-filters-libs = %{version}-%{release}
+Requires:	fonts-TTF-freefont
 Requires:	poppler-progs
 # pstopdf
 Requires:	bc
