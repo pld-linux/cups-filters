@@ -7,8 +7,8 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.0.41
-Release:	8
+Version:	1.0.42
+Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -21,7 +21,7 @@ Release:	8
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	fe5a9a07b9a64b35975154068cbedef9
+# Source0-md5:	3047524b51f2ac064663f1997c7d2c81
 Patch0:		%{name}-cups15.patch
 Patch1:		%{name}-pdf-landscape.patch
 Patch2:		%{name}-dbus.patch
@@ -279,6 +279,8 @@ EOF
 	DESTDIR=$RPM_BUILD_ROOT
 %endif
 
+install -p utils/cups-browsed.service $RPM_BUILD_ROOT%{systemdunitdir}
+
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/lib*.la
 # dlopened module
@@ -288,7 +290,9 @@ EOF
 # Not sure what is this good for.
 %{__rm} $RPM_BUILD_ROOT%{_bindir}/ttfread
 
-install -p utils/cups-browsed.service $RPM_BUILD_ROOT%{systemdunitdir}
+# currently in foomatic-filters; to be packaged here after new stable foomatic-filters release
+%{__rm} $RPM_BUILD_ROOT%{_cups_serverbin}/filter/foomatic-rip \
+	$RPM_BUILD_ROOT%{_mandir}/man1/foomatic-rip.1
 
 %clean
 rm -rf $RPM_BUILD_ROOT

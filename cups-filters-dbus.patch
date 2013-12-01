@@ -44,15 +44,20 @@ diff -up cups-filters-1.0.41/configure.ac.dbus cups-filters-1.0.41/configure.ac
  	avahi:           ${enable_avahi}
  	browsing:        ${with_browseremoteprotocols}
  	werror:          ${enable_werror}
-diff -up cups-filters-1.0.41/filter/colord.c.dbus cups-filters-1.0.41/filter/colord.c
---- cups-filters-1.0.41/filter/colord.c.dbus	2013-07-29 20:12:42.000000000 +0100
-+++ cups-filters-1.0.41/filter/colord.c	2013-11-06 17:16:58.505234623 +0000
-@@ -32,6 +32,8 @@ MIT Open Source License  -  http://www.o
+--- cups-filters-1.0.42/cupsfilters/colord.c.orig	2013-11-27 00:40:41.000000000 +0100
++++ cups-filters-1.0.42/cupsfilters/colord.c	2013-12-01 14:33:00.854197621 +0100
+@@ -32,12 +32,12 @@ MIT Open Source License  -  http://www.o
  #include <stdio.h>
  #include <sys/types.h>
  
-+#include "config.h"
++#include "colord.h"
 +
  #ifdef HAVE_DBUS
    #include <dbus/dbus.h>
  #endif
+ 
+-#include "colord.h"
+-
+ #define QUAL_COLORSPACE   0
+ #define QUAL_MEDIA        1
+ #define QUAL_RESOLUTION   2
