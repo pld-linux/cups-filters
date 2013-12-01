@@ -1,4 +1,11 @@
+#
+# Conditional build:
+%bcond_without	static_libs	# static libraries
+%bcond_without	perl		# Perl module
+%bcond_without	php		# PHP extension
+#
 Summary:	OpenPrinting CUPS filters and backends
+Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
 Version:	1.0.41
 Release:	8
@@ -11,41 +18,52 @@ Release:	8
 # GPLv3+:  filters: urftopdf
 # LGPLv2+:   utils: cups-browsed
 # MIT:     filters: gstoraster, pdftoijs, pdftoopvp, pdftopdf, pdftoraster
-License:	GPLv2 and GPLv2+ and GPLv3 and GPLv3+ and LGPLv2+ and MIT
+License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
 # Source0-md5:	fe5a9a07b9a64b35975154068cbedef9
+Patch0:		%{name}-cups15.patch
 Patch1:		%{name}-pdf-landscape.patch
 Patch2:		%{name}-dbus.patch
+Patch3:		%{name}-php.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
-BuildRequires:	autoconf
-BuildRequires:	automake
+BuildRequires:	autoconf >= 2.65
+BuildRequires:	automake >= 1:1.11
 BuildRequires:	avahi-devel
 BuildRequires:	avahi-glib-devel
 BuildRequires:	cups-devel >= 1:1.6.0
 BuildRequires:	dbus-devel
-BuildRequires:	fontconfig-devel
-BuildRequires:	freetype-devel
+BuildRequires:	fontconfig-devel >= 2.0.0
+BuildRequires:	freetype-devel >= 2
+# /usr/bin/gs, for features detection
+BuildRequires:	ghostscript
 BuildRequires:	ghostscript-ijs-devel
-BuildRequires:	lcms2-devel
+BuildRequires:	glib2-devel >= 1:2.30.2
+BuildRequires:	lcms2-devel >= 2
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
+BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libtool
-BuildRequires:	pkgconfig
-BuildRequires:	poppler-cpp-devel
-BuildRequires:	poppler-devel
-BuildRequires:	poppler-progs
-BuildRequires:	python-pycups
+%{?with_perl:BuildRequires:	perl-devel}
+%{?with_php:BuildRequires:	php-devel >= 5}
+BuildRequires:	pkgconfig >= 1:0.20
+# just for cpp/poppler-version.h
+BuildRequires:	poppler-cpp-devel >= 0.18
+BuildRequires:	poppler-devel >= 0.18
+# /usr/bin/pdftops, for features detection
+BuildRequires:	poppler-progs >= 0.18
 BuildRequires:	rpmbuild(macros) >= 1.671
-BuildRequires:	qpdf-devel
-BuildRequires:	systemd
+BuildRequires:	qpdf-devel >= 3.0.2
 BuildRequires:	zlib-devel
-# Testing font for test scripts.
-#BuildRequires:	dejavu-sans-fonts
-Requires:	cups-filters-libs = %{version}-%{release}
+# DejaVuSans.ttf (testing font for test scripts)
+#BuildRequires:	fonts-TTF-DejaVu
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	cups >= 1:1.6.0
+Requires:	fontconfig >= 2.0.0
 Requires:	fonts-TTF-freefont
-Requires:	poppler-progs
+Requires:	poppler-progs >= 0.18
+Requires:	qpdf-libs >= 3.0.2
 # pstopdf
 Requires:	bc
 Requires:	grep
@@ -56,19 +74,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_cups_serverbin		%(/usr/bin/cups-config --serverbin)
 
-%package libs
-Summary:	OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
-Group:		Libraries
-# LGPLv2: libcupsfilters
-# MIT:    libfontembed
-License:	LGPLv2 and MIT
-
-%package devel
-Summary:	OpenPrinting CUPS filters and backends - development environment
-License:	LGPLv2 and MIT
-Group:		Development/Libraries
-Requires:	cups-filters-libs = %{version}-%{release}
-
 %description
 Contains backends, filters, and other software that was once part of
 the core CUPS distribution but is no longer maintained by Apple Inc.
@@ -76,49 +81,85 @@ In addition it contains additional filters developed independently of
 Apple, especially filters for the PDF-centric printing workflow
 introduced by OpenPrinting.
 
+%description -l pl.UTF-8
+Ten pakiet zawiera backendy, filtry i inne oprogramowanie, będące
+kiedyś częścią CUPS-a, ale nie utrzymywane już przez firmę Apple Inc.
+Dodatkowo pakiet zawiera dodatkowe filtry stworzone niezależnie od
+Apple'a, w szczególności filtry dla PDF-ocentrycznego obiegu
+drukowania wprowadzonego przez OpenPrinting.
+
+%package libs
+Summary:	OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
+Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting - biblioteki cupsfilters i fontembed
+# LGPLv2: libcupsfilters
+# MIT:    libfontembed
+License:	LGPL v2, MIT
+Group:		Libraries
+Requires:	cups-lib >= 1:1.6.0
+
 %description libs
 This package provides cupsfilters and fontembed libraries.
+
+%description libs -l pl.UTF-8
+Ten pakiet udostępnia biblioteki cupsfilters i fontembed.
+
+%package devel
+Summary:	OpenPrinting CUPS filters and backends - development environment
+Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting - środowisko programistyczne
+License:	LGPL v2, MIT
+Group:		Development/Libraries
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	cups-devel >= 1:1.6.0
+Requires:	libjpeg-devel
+Requires:	libpng-devel
+Requires:	libtiff-devel
 
 %description devel
 This is the development package for OpenPrinting CUPS filters and
 backends.
 
+%description devel -l pl.UTF-8
+To jest pakiet programistyczny dla filtrów i backendów CUPS-a z
+projektu OpenPrinting.
+
+%package static
+Summary:	OpenPrinting CUPS filters and backends - static cupsfilters and fontembed libraries
+Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting - statyczne biblioteki cupsfilters i fontembed
+License:	LGPL v2, MIT
+Group:		Development/Libraries
+Requires:	%{name}-devel = %{version}-%{release}
+
+%description static
+This package provides static cupsfilters and fontembed libraries.
+
+%description static -l pl.UTF-8
+Ten pakiet udostępnia statyczne biblioteki cupsfilters i fontembed.
+
 %package -n cups-browsed
 Summary:	A daemon for browsing the Bonjour broadcasts of shared, remote CUPS printers
+Summary(pl.UTF-8):	Demon do przeglądania broadcastów Bonjour współdzielonych, zdalnych drukarek CUPS
 Group:		Applications/Printing
+Requires(post,preun):	/sbin/chkconfig
 Requires(post,preun,postun):	systemd-units
-Requires:	cups-filters-libs = %{version}-%{release}
+Requires:	glib2 >= 1:2.30.2
 Requires:	systemd-units >= 38
 
 %description -n cups-browsed
 A daemon for browsing the Bonjour broadcasts of shared,
 remote CUPS printers.
 
-%package -n cups-backend-serial
-Summary:	Serial port backend for CUPS
-Summary(pl.UTF-8):	Backend obsługujący porty szeregowe dla CUPS-a
-# must be larger than cups.spec
-Epoch:		2
-License:	GPL v2 + openssl exception
-Group:		Applications/Printing
-Requires:	%{name} = %{version}-%{release}
-
-%description -n cups-backend-serial
-This package allow CUPS printing on printers connected by serial
-ports.
-
-%description -n cups-backend-serial -l pl.UTF-8
-Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach
-podłączonych do portów szeregowych.
+%description -n cups-browsed -l pl.UTF-8
+Demon do przeglądania broadcastów Bonjour współdzielonych, zdalnych
+drukarek CUPS.
 
 %package -n cups-backend-parallel
 Summary:	Parallel port backend for CUPS
-Summary(pl.UTF-8):	Backend obsługujący porty równoległe dla CUPS-a
-# must be larger than cups.spec
+Summary(pl.UTF-8):	Backend CUPS-a obsługujący porty równoległe
+# must be larger than cups.spec before 1.6.0
 Epoch:		2
-License:	GPL v2 + openssl exception
+License:	GPL v2 + OpenSSL exception
 Group:		Applications/Printing
-Requires:	%{name} = %{version}-%{release}
+Requires:	cups >= 1:1.6.0
 
 %description -n cups-backend-parallel
 This package allow CUPS printing on printers connected by parallel
@@ -128,12 +169,64 @@ ports.
 Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach
 podłączonych do portów równoległych.
 
+%package -n cups-backend-serial
+Summary:	Serial port backend for CUPS
+Summary(pl.UTF-8):	Backend CUPS-a obsługujący porty szeregowe
+# must be larger than cups.spec before 1.6.0
+Epoch:		2
+License:	GPL v2 + OpenSSL exception
+Group:		Applications/Printing
+Requires:	cups >= 1:1.6.0
+
+%description -n cups-backend-serial
+This package allow CUPS printing on printers connected by serial
+ports.
+
+%description -n cups-backend-serial -l pl.UTF-8
+Ten pakiet umożliwia drukowanie z poziomu CUPS-a na drukarkach
+podłączonych do portów szeregowych.
+
+%package -n perl-cups
+Summary:	Perl module for CUPS
+Summary(pl.UTF-8):	Moduł Perla CUPS
+# must be larger than cups.spec before 1.6.0
+Epoch:		2
+License:	GPL v2 + OpenSSL exception
+Group:		Development/Languages/Perl
+Requires:	cups-lib >= 1:1.6.0
+
+%description -n perl-cups
+Perl module for Common Unix Printing System.
+
+%description -n perl-cups -l pl.UTF-8
+Moduł Perla do ogólnego systemu druku dla Uniksa.
+
+%package -n php-cups
+Summary:	PHP module for CUPS
+Summary(pl.UTF-8):	Moduł PHP CUPS
+# must be larger than cups.spec before 1.6.0
+Epoch:		2
+License:	GPL v2 + OpenSSL exception
+Group:		Development/Languages/PHP
+Requires:	cups-lib >= 1:1.6.0
+%{?requires_php_extension}
+Requires:	/etc/php/conf.d
+Requires:	php(core) >= 5.0.0
+
+%description -n php-cups
+PHP module for Common Unix Printing System.
+
+%description -n php-cups -l pl.UTF-8
+Moduł PHP do ogólnego systemu druku dla Uniksa.
+
 # CREATE ANY NEW PACKAGES BEFORE cups-backend-* (EPOCH)
 
 %prep
 %setup -q
+%patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %{__aclocal}
@@ -141,13 +234,30 @@ podłączonych do portów równoległych.
 %{__automake}
 
 %configure \
-	--disable-static \
-	--disable-silent-rules \
-	--with-pdftops=hybrid \
 	--enable-dbus \
-	--with-rcdir=no
+	--disable-silent-rules \
+	%{!?with_static_libs:--disable-static} \
+	--with-acroread-path=/usr/bin/acroread \
+	--with-gs-path=/usr/bin/gs \
+	%{?with_php:--with-php} \
+	--with-pdftocairo-path=/usr/bin/pdftocairo \
+	--with-pdftops=hybrid \
+	--with-pdftops-path=/usr/bin/pdftops \
+	--with-rcdir=/etc/rc.d/init.d \
+	--with-rclevels= \
+	--with-test-font-path=/usr/share/fonts/TTF/DejaVuSans.ttf
 
 %{__make}
+
+%if %{with perl}
+cd scripting/perl
+%{__perl} Makefile.PL \
+	INSTALLDIRS=vendor \
+	OPTIMIZE="%{rpmcflags}"
+
+%{__make}
+cd ../..
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -156,8 +266,25 @@ install -d $RPM_BUILD_ROOT%{systemdunitdir}
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/lib*.la
+%if %{with php}
+install -d $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d
+cat > $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d/phpcups.ini << 'EOF'
+; Enable phpcups extension module
+extension=libphpcups.so
+EOF
+%endif
 
+%if %{with perl}
+%{__make} -C scripting/perl install \
+	DESTDIR=$RPM_BUILD_ROOT
+%endif
+
+# obsoleted by pkg-config
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/lib*.la
+# dlopened module
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/php/libphpcups.la
+# packaged as %doc
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/cups-filters
 # Not sure what is this good for.
 %{__rm} $RPM_BUILD_ROOT%{_bindir}/ttfread
 
@@ -165,6 +292,9 @@ install -p utils/cups-browsed.service $RPM_BUILD_ROOT%{systemdunitdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
 
 %post -n cups-browsed
 if [ $1 -eq 1 ] ; then
@@ -182,31 +312,56 @@ if [ $1 -eq 1 ] ; then
 		sed -i -e "s,^BrowsePoll,#BrowsePoll directive moved to cups-browsed.conf\n#BrowsePoll,i" %{_sysconfdir}/cups/cupsd.conf || :
 	fi
 fi
+/sbin/chkconfig --add cups-browsed
+%service cups-browsed restart
 %systemd_post cups-browsed.service
 
 %preun -n cups-browsed
+if [ "$1" = "0" ]; then
+	%service cups-browsed stop
+	/sbin/chkconfig --del cups-browsed
+fi
 %systemd_preun cups-browsed.service
 
 %postun -n cups-browsed
 %systemd_reload
 
-%post libs -p /sbin/ldconfig
-%postun libs -p /sbin/ldconfig
-
 %files
 %defattr(644,root,root,755)
-%doc README AUTHORS NEWS
+%doc AUTHORS COPYING NEWS README
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
-%attr(755,root,root) %{_cups_serverbin}/filter/*
+%attr(755,root,root) %{_cups_serverbin}/filter/bannertopdf
+%attr(755,root,root) %{_cups_serverbin}/filter/commandtoescpx
+%attr(755,root,root) %{_cups_serverbin}/filter/commandtopclx
+%attr(755,root,root) %{_cups_serverbin}/filter/gstopxl
+%attr(755,root,root) %{_cups_serverbin}/filter/gstoraster
+%attr(755,root,root) %{_cups_serverbin}/filter/imagetopdf
+%attr(755,root,root) %{_cups_serverbin}/filter/imagetops
+%attr(755,root,root) %{_cups_serverbin}/filter/imagetoraster
+%attr(755,root,root) %{_cups_serverbin}/filter/pdftoijs
+%attr(755,root,root) %{_cups_serverbin}/filter/pdftoippprinter
+%attr(755,root,root) %{_cups_serverbin}/filter/pdftoopvp
+%attr(755,root,root) %{_cups_serverbin}/filter/pdftopdf
+%attr(755,root,root) %{_cups_serverbin}/filter/pdftops
+%attr(755,root,root) %{_cups_serverbin}/filter/pdftoraster
+%attr(755,root,root) %{_cups_serverbin}/filter/pstopdf
+%attr(755,root,root) %{_cups_serverbin}/filter/rastertoescpx
+%attr(755,root,root) %{_cups_serverbin}/filter/rastertopclx
+%attr(755,root,root) %{_cups_serverbin}/filter/textonly
+%attr(755,root,root) %{_cups_serverbin}/filter/texttopdf
+%attr(755,root,root) %{_cups_serverbin}/filter/texttops
+%attr(755,root,root) %{_cups_serverbin}/filter/urftopdf
 %{_datadir}/cups/banners
 %{_datadir}/cups/charsets
-%{_datadir}/cups/data/*.pdf
+%{_datadir}/cups/data/default.pdf
+%{_datadir}/cups/data/default-testpage.pdf
 %{_datadir}/cups/data/testprint
-# this needs to be in the main package because of cupsfilters.drv
-%{_datadir}/cups/ppdc/pcl.h
 %{_datadir}/cups/drv/cupsfilters.drv
 %{_datadir}/cups/mime/cupsfilters.types
 %{_datadir}/cups/mime/cupsfilters.convs
+# definitions for drivers; pcl.h is used by cupsfilters.drv
+%{_datadir}/cups/ppdc/escp.h
+%{_datadir}/cups/ppdc/pcl.h
 %{_datadir}/ppd/cupsfilters
 
 %files libs
@@ -219,26 +374,51 @@ fi
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/cupsfilters
-%{_includedir}/fontembed
-%{_datadir}/cups/ppdc/escp.h
-%{_pkgconfigdir}/libcupsfilters.pc
-%{_pkgconfigdir}/libfontembed.pc
 %attr(755,root,root) %{_libdir}/libcupsfilters.so
 %attr(755,root,root) %{_libdir}/libfontembed.so
+%{_includedir}/cupsfilters
+%{_includedir}/fontembed
+%{_pkgconfigdir}/libcupsfilters.pc
+%{_pkgconfigdir}/libfontembed.pc
+
+%files static
+%defattr(644,root,root,755)
+%{_libdir}/libcupsfilters.a
+%{_libdir}/libfontembed.a
 
 %files -n cups-browsed
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cups/cups-browsed.conf
 %attr(755,root,root) %{_sbindir}/cups-browsed
+%attr(754,root,root) /etc/rc.d/init.d/cups-browsed
 %{systemdunitdir}/cups-browsed.service
-%{_mandir}/man8/cups-browsed.8*
 %{_mandir}/man5/cups-browsed.conf.5*
+%{_mandir}/man8/cups-browsed.8*
+
+%files -n cups-backend-parallel
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_cups_serverbin}/backend/parallel
 
 %files -n cups-backend-serial
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_cups_serverbin}/backend/serial
 
-%files -n cups-backend-parallel
+%if %{with perl}
+%files -n perl-cups
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_cups_serverbin}/backend/parallel
+%doc scripting/perl/README
+%{perl_vendorarch}/CUPS.pm
+%dir %{perl_vendorarch}/auto/CUPS
+%{perl_vendorarch}/auto/CUPS/CUPS.bs
+%{perl_vendorarch}/auto/CUPS/autosplit.ix
+%attr(755,root,root) %{perl_vendorarch}/auto/CUPS/CUPS.so
+%{_mandir}/man3/CUPS.3pm*
+%endif
+
+%if %{with php}
+%files -n php-cups
+%defattr(644,root,root,755)
+%doc scripting/php/README
+%attr(755,root,root) %{php_extensiondir}/libphpcups.so
+%config(noreplace) %verify(not md5 mtime size) %{php_sysconfdir}/conf.d/phpcups.ini
+%endif

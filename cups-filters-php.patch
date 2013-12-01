@@ -1,0 +1,53 @@
+--- cups-filters-1.0.41/configure.ac.orig	2013-12-01 10:26:49.834817503 +0100
++++ cups-filters-1.0.41/configure.ac	2013-12-01 10:37:48.081456545 +0100
+@@ -568,6 +568,8 @@
+ 	])
+ 	PHPDIR="`$PHPCONFIG --extension-dir`"
+ 	AC_SUBST(PHPDIR)
++	PHP_CFLAGS="`$PHPCONFIG --includes`"
++	AC_SUBST(PHP_CFLAGS)
+ ])
+ 
+ # =========
+--- cups-filters-1.0.41/Makefile.am.orig	2013-12-01 10:26:49.831484169 +0100
++++ cups-filters-1.0.41/Makefile.am	2013-12-01 10:37:08.568124870 +0100
+@@ -696,7 +696,7 @@
+ 	scripting/php/phpcups.c \
+ 	scripting/php/phpcups.h
+ libphpcups_la_LIBADD = $(CUPS_LIBS)
+-libphpcups_la_CFLAGS = $(CUPS_CFLAGS)
+-libphpcups_la_LDFLAGS = -no-undefined
++libphpcups_la_CFLAGS = $(CUPS_CFLAGS) $(PHP_CFLAGS)
++libphpcups_la_LDFLAGS = -module -avoid-version -shared -no-undefined
+ endif # WITH_PHP
+ 
+--- cups-filters-1.0.41/scripting/php/phpcups.c.orig	2012-06-22 18:10:47.000000000 +0200
++++ cups-filters-1.0.41/scripting/php/phpcups.c	2013-12-01 10:50:16.171425151 +0100
+@@ -29,12 +29,16 @@
+  * Include necessary headers...
+  */
+ 
+-#include <cups/string-private.h>
++#include <cups/cups.h>
+ #include "php.h"
+ #include "php_ini.h"
+ #include "ext/standard/info.h"
+ #include "phpcups.h"
+ 
++#ifndef CUPS_SVERSION
++#  define CPPSTR(x) #x
++#  define CUPS_SVERSION CPPSTR(CUPS_VERSION_MAJOR) "." CPPSTR(CUPS_VERSION_MINOR) "." CPPSTR(CUPS_VERSION_PATCH)
++#endif
+ 
+ /*
+  * PHP function list...
+--- cups-filters-1.0.41/scripting/php/phpcups.h.orig	2012-06-22 18:10:47.000000000 +0200
++++ cups-filters-1.0.41/scripting/php/phpcups.h	2013-12-01 10:42:51.171443826 +0100
+@@ -22,7 +22,6 @@
+ 
+ #  include <cups/cups.h>
+ #  include <cups/language.h>
+-#  include <cups/debug-private.h>
+ #  include <fcntl.h>
+ #  include <sys/stat.h>
+ #  if defined(WIN32) || defined(__EMX__)
