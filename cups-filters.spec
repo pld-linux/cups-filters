@@ -62,6 +62,7 @@ Requires:	%{name}-libs = %{version}-%{release}
 Requires:	cups >= 1:1.6.0
 Requires:	fontconfig >= 2.0.0
 Requires:	fonts-TTF-freefont
+Requires:	ghostscript
 Requires:	poppler-progs >= 0.18
 Requires:	qpdf-libs >= 3.0.2
 # pstopdf
