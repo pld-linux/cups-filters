@@ -7,8 +7,8 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.0.42
-Release:	2
+Version:	1.0.43
+Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -21,11 +21,9 @@ Release:	2
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	3047524b51f2ac064663f1997c7d2c81
-Patch0:		%{name}-cups15.patch
-Patch1:		%{name}-pdf-landscape.patch
-Patch2:		%{name}-dbus.patch
-Patch3:		%{name}-php.patch
+# Source0-md5:	50f760c4cb7be37544c1174a12b1900e
+Patch0:		%{name}-dbus.patch
+Patch1:		%{name}-php.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake >= 1:1.11
@@ -69,7 +67,10 @@ Requires:	qpdf-libs >= 3.0.2
 Requires:	bc
 Requires:	grep
 Requires:	sed
+Provides:	cups-filter-foomatic
 Provides:	ghostscript-cups = 9.08
+Obsoletes:	cups-filter-foomatic
+Obsoletes:	foomatic-filters
 Obsoletes:	ghostscript-cups < 9.08
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -226,8 +227,6 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
 
 %build
 %{__aclocal}
@@ -291,10 +290,6 @@ install -p utils/cups-browsed.service $RPM_BUILD_ROOT%{systemdunitdir}
 # Not sure what is this good for.
 %{__rm} $RPM_BUILD_ROOT%{_bindir}/ttfread
 
-# currently in foomatic-filters; to be packaged here after new stable foomatic-filters release
-%{__rm} $RPM_BUILD_ROOT%{_cups_serverbin}/filter/foomatic-rip \
-	$RPM_BUILD_ROOT%{_mandir}/man1/foomatic-rip.1
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -338,6 +333,7 @@ fi
 %attr(755,root,root) %{_cups_serverbin}/filter/bannertopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/commandtoescpx
 %attr(755,root,root) %{_cups_serverbin}/filter/commandtopclx
+%attr(755,root,root) %{_cups_serverbin}/filter/foomatic-rip
 %attr(755,root,root) %{_cups_serverbin}/filter/gstopxl
 %attr(755,root,root) %{_cups_serverbin}/filter/gstoraster
 %attr(755,root,root) %{_cups_serverbin}/filter/imagetopdf
@@ -368,6 +364,7 @@ fi
 %{_datadir}/cups/ppdc/escp.h
 %{_datadir}/cups/ppdc/pcl.h
 %{_datadir}/ppd/cupsfilters
+%{_mandir}/man1/foomatic-rip.1*
 
 %files libs
 %defattr(644,root,root,755)
