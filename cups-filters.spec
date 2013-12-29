@@ -8,7 +8,7 @@ Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
 Version:	1.0.43
-Release:	1
+Release:	2
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -72,6 +72,8 @@ Provides:	ghostscript-cups = 9.08
 Obsoletes:	cups-filter-foomatic
 Obsoletes:	foomatic-filters
 Obsoletes:	ghostscript-cups < 9.08
+Conflicts:	cups-backend-hp < 3.13.11-2
+Conflicts:	hplip-ppd < 3.13.11-2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_cups_serverbin		%(/usr/bin/cups-config --serverbin)
