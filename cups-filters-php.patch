@@ -51,3 +51,15 @@
  #  include <fcntl.h>
  #  include <sys/stat.h>
  #  if defined(WIN32) || defined(__EMX__)
+diff -urN cups-filters-1.0.53.orig/scripting/php/phpcups.c cups-filters-1.0.53/scripting/php/phpcups.c
+--- cups-filters-1.0.53.orig/scripting/php/phpcups.c	2014-05-01 18:48:49.622212848 +0200
++++ cups-filters-1.0.53/scripting/php/phpcups.c	2014-05-01 18:49:21.228878551 +0200
+@@ -44,7 +44,7 @@
+  * PHP function list...
+  */
+ 
+-function_entry phpcups_functions[] =
++zend_function_entry phpcups_functions[] =
+ {
+   PHP_FE(cups_cancel_job, NULL)
+   PHP_FE(cups_get_dests, NULL)
