@@ -3,12 +3,13 @@
 %bcond_without	static_libs	# static libraries
 %bcond_without	perl		# Perl module
 %bcond_without	php		# PHP extension
-#
+
+%define		php_name	php55
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
 Version:	1.0.53
-Release:	3
+Release:	4
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -34,6 +35,7 @@ BuildRequires:	dbus-devel
 BuildRequires:	fontconfig-devel >= 2.0.0
 BuildRequires:	freetype-devel >= 2
 # /usr/bin/gs, for features detection
+%{?with_php:BuildRequires:	%{php_name}-devel}
 BuildRequires:	ghostscript
 BuildRequires:	ghostscript-ijs-devel
 BuildRequires:	glib2-devel >= 1:2.30.2
@@ -44,25 +46,24 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
 BuildRequires:	libtool
 %{?with_perl:BuildRequires:	perl-devel}
-%{?with_php:BuildRequires:	php-devel >= 5}
 BuildRequires:	pkgconfig >= 1:0.20
 # just for cpp/poppler-version.h
 BuildRequires:	poppler-cpp-devel >= 0.18
 BuildRequires:	poppler-devel >= 0.18
 # /usr/bin/pdftops, for features detection
 BuildRequires:	poppler-progs >= 0.18
-BuildRequires:	rpmbuild(macros) >= 1.671
 BuildRequires:	qpdf-devel >= 3.0.2
+BuildRequires:	rpmbuild(macros) >= 1.671
 BuildRequires:	zlib-devel
 # DejaVuSans.ttf (testing font for test scripts)
 #BuildRequires:	fonts-TTF-DejaVu
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	cups >= 1:1.6.0
 Requires:	fontconfig >= 2.0.0
-Suggests:	fonts-TTF-freefont
 Requires:	ghostscript
 Requires:	poppler-progs >= 0.18
 Requires:	qpdf-libs >= 3.0.2
+Suggests:	fonts-TTF-freefont
 # pstopdf
 Requires:	bc
 Requires:	grep
@@ -149,8 +150,8 @@ Requires:	glib2 >= 1:2.30.2
 Requires:	systemd-units >= 38
 
 %description -n cups-browsed
-A daemon for browsing the Bonjour broadcasts of shared,
-remote CUPS printers.
+A daemon for browsing the Bonjour broadcasts of shared, remote CUPS
+printers.
 
 %description -n cups-browsed -l pl.UTF-8
 Demon do przeglądania broadcastów Bonjour współdzielonych, zdalnych
@@ -205,7 +206,7 @@ Perl module for Common Unix Printing System.
 %description -n perl-cups -l pl.UTF-8
 Moduł Perla do ogólnego systemu druku dla Uniksa.
 
-%package -n php-cups
+%package -n %{php_name}-cups
 Summary:	PHP module for CUPS
 Summary(pl.UTF-8):	Moduł PHP CUPS
 # must be larger than cups.spec before 1.6.0
@@ -214,13 +215,11 @@ License:	GPL v2 + OpenSSL exception
 Group:		Development/Languages/PHP
 Requires:	cups-lib >= 1:1.6.0
 %{?requires_php_extension}
-Requires:	/etc/php/conf.d
-Requires:	php(core) >= 5.0.0
 
-%description -n php-cups
+%description -n %{php_name}-cups
 PHP module for Common Unix Printing System.
 
-%description -n php-cups -l pl.UTF-8
+%description -n %{php_name}-cups -l pl.UTF-8
 Moduł PHP do ogólnego systemu druku dla Uniksa.
 
 # CREATE ANY NEW PACKAGES BEFORE cups-backend-* (EPOCH)
@@ -260,7 +259,6 @@ cd ../..
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{systemdunitdir}
-
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
@@ -270,6 +268,8 @@ cat > $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d/phpcups.ini << 'EOF'
 ; Enable phpcups extension module
 extension=libphpcups.so
 EOF
+# dlopened module
+%{__rm} $RPM_BUILD_ROOT%{php_extensiondir}/libphpcups.la
 %endif
 
 %if %{with perl}
@@ -281,8 +281,6 @@ install -p utils/cups-browsed.service $RPM_BUILD_ROOT%{systemdunitdir}
 
 # obsoleted by pkg-config
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/lib*.la
-# dlopened module
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/php/libphpcups.la
 # packaged as %doc
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/cups-filters
 # Not sure what is this good for.
@@ -420,9 +418,9 @@ fi
 %endif
 
 %if %{with php}
-%files -n php-cups
+%files -n %{php_name}-cups
 %defattr(644,root,root,755)
 %doc scripting/php/README
-%attr(755,root,root) %{php_extensiondir}/libphpcups.so
 %config(noreplace) %verify(not md5 mtime size) %{php_sysconfdir}/conf.d/phpcups.ini
+%attr(755,root,root) %{php_extensiondir}/libphpcups.so
 %endif
