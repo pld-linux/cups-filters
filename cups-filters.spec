@@ -4,12 +4,14 @@
 %bcond_without	perl		# Perl module
 %bcond_without	php		# PHP extension
 
+%if 0%{!?php_name:1}
 %define		php_name	php55
+%endif
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.0.53
-Release:	4
+Version:	1.0.54
+Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -22,7 +24,7 @@ Release:	4
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	85c605f82cddfd9990a17f1ffaf51eec
+# Source0-md5:	181ee0e6c27cfbb05e241f0267363678
 Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
@@ -344,6 +346,7 @@ fi
 %attr(755,root,root) %{_cups_serverbin}/filter/pstopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/rastertoescpx
 %attr(755,root,root) %{_cups_serverbin}/filter/rastertopclx
+%attr(755,root,root) %{_cups_serverbin}/filter/rastertopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/textonly
 %attr(755,root,root) %{_cups_serverbin}/filter/texttopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/texttops
