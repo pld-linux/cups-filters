@@ -414,7 +414,6 @@ fi
 %doc scripting/perl/README
 %{perl_vendorarch}/CUPS.pm
 %dir %{perl_vendorarch}/auto/CUPS
-%{perl_vendorarch}/auto/CUPS/CUPS.bs
 %{perl_vendorarch}/auto/CUPS/autosplit.ix
 %attr(755,root,root) %{perl_vendorarch}/auto/CUPS/CUPS.so
 %{_mandir}/man3/CUPS.3pm*
