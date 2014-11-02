@@ -10,8 +10,8 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.0.55
-Release:	2
+Version:	1.0.61
+Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -24,7 +24,7 @@ Release:	2
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	088615a412f23a6237259179a6ab9f10
+# Source0-md5:	f16a422bf3135e90b83f969c13a259cf
 Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
@@ -353,12 +353,18 @@ fi
 %attr(755,root,root) %{_cups_serverbin}/filter/urftopdf
 %{_datadir}/cups/banners
 %{_datadir}/cups/charsets
+%{_datadir}/cups/data/classified.pdf
+%{_datadir}/cups/data/confidential.pdf
 %{_datadir}/cups/data/default.pdf
 %{_datadir}/cups/data/default-testpage.pdf
 %{_datadir}/cups/data/form_english.pdf
 %{_datadir}/cups/data/form_english_in.odt
 %{_datadir}/cups/data/form_russian.pdf
 %{_datadir}/cups/data/form_russian_in.odt
+%{_datadir}/cups/data/secret.pdf
+%{_datadir}/cups/data/standard.pdf
+%{_datadir}/cups/data/topsecret.pdf
+%{_datadir}/cups/data/unclassified.pdf
 %{_datadir}/cups/data/testprint
 %{_datadir}/cups/drv/cupsfilters.drv
 %{_datadir}/cups/mime/cupsfilters.types
