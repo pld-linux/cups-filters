@@ -295,7 +295,7 @@ rm -rf $RPM_BUILD_ROOT
 %postun	libs -p /sbin/ldconfig
 
 %post -n cups-browsed
-if [ $1 -eq 1 ] ; then
+if [ "$1" = "1" ]; then
 	# We can remove this after few releases, it's just for the introduction of cups-browsed.
 	if [ -f %{_sysconfdir}/cups/cups-browsed.conf ]; then
 		echo -e "\n# NOTE: This file is not part of CUPS. You need to start & enable cups-browsed service." >>%{_sysconfdir}/cups/cups-browsed.conf
@@ -352,7 +352,7 @@ fi
 %attr(755,root,root) %{_cups_serverbin}/filter/texttopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/texttops
 %attr(755,root,root) %{_cups_serverbin}/filter/urftopdf
-%{_datadir}/cups/banners
+%{_datadir}/cups/banners/*
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data/classified.pdf
 %{_datadir}/cups/data/confidential.pdf
