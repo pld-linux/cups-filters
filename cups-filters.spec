@@ -10,8 +10,8 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.0.67
-Release:	2
+Version:	1.0.69
+Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -24,7 +24,7 @@ Release:	2
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	0a5cfab3736120345c5e254dd2efbe64
+# Source0-md5:	914939cf0380ce04a91597a6f666c812
 Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
@@ -339,7 +339,6 @@ fi
 %attr(755,root,root) %{_cups_serverbin}/filter/imagetops
 %attr(755,root,root) %{_cups_serverbin}/filter/imagetoraster
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftoijs
-%attr(755,root,root) %{_cups_serverbin}/filter/pdftoippprinter
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftoopvp
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftops
@@ -348,6 +347,7 @@ fi
 %attr(755,root,root) %{_cups_serverbin}/filter/rastertoescpx
 %attr(755,root,root) %{_cups_serverbin}/filter/rastertopclx
 %attr(755,root,root) %{_cups_serverbin}/filter/rastertopdf
+%attr(755,root,root) %{_cups_serverbin}/filter/sys5ippprinter
 %attr(755,root,root) %{_cups_serverbin}/filter/textonly
 %attr(755,root,root) %{_cups_serverbin}/filter/texttopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/texttops
