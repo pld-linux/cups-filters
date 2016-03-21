@@ -1,6 +1,7 @@
 #
 # Conditional build:
 %bcond_without	static_libs	# static libraries
+%bcond_without	braille		# Braille embossers support
 %bcond_without	perl		# Perl module
 %bcond_without	php		# PHP extension
 
@@ -10,8 +11,8 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.0.76
-Release:	4
+Version:	1.8.2
+Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -24,7 +25,7 @@ Release:	4
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	92e14b4f52a320c8d8b8176918bd4a8c
+# Source0-md5:	a32a83aef1808e4ccabad96a593a9f89
 Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
@@ -43,6 +44,7 @@ BuildRequires:	ghostscript-ijs-devel
 BuildRequires:	glib2-devel >= 1:2.30.2
 BuildRequires:	lcms2-devel >= 2
 BuildRequires:	libjpeg-devel
+%{?with_braille:BuildRequires:	liblouis-devel}
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtiff-devel
@@ -95,6 +97,18 @@ kiedyś częścią CUPS-a, ale nie utrzymywane już przez firmę Apple Inc.
 Dodatkowo pakiet zawiera dodatkowe filtry stworzone niezależnie od
 Apple'a, w szczególności filtry dla PDF-ocentrycznego obiegu
 drukowania wprowadzonego przez OpenPrinting.
+
+%package braille
+Summary:	OpenPrinting CUPS filters for Braille embossers
+Summary(pl.UTF-8):	Filtry CUPS-a z projektu OpenPrinting dla drukarek Braille'a
+Group:		Applications/Printing
+Requires:	%{name} = %{version}-%{release}
+
+%description braille
+OpenPrinting CUPS filters for Braille embossers.
+
+%description braille -l pl.UTF-8
+Filtry CUPS-a z projektu OpenPrinting dla drukarek Braille'a.
 
 %package libs
 Summary:	OpenPrinting CUPS filters and backends - cupsfilters and fontembed libraries
@@ -238,6 +252,7 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 %{__automake}
 
 %configure \
+	%{!?with_braille:--disable-braille} \
 	--enable-dbus \
 	--disable-silent-rules \
 	%{!?with_static_libs:--disable-static} \
@@ -330,6 +345,7 @@ fi
 %doc AUTHORS COPYING NEWS README
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
 %attr(755,root,root) %{_bindir}/foomatic-rip
+%attr(755,root,root) %{_cups_serverbin}/backend/beh
 %attr(755,root,root) %{_cups_serverbin}/filter/bannertopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/commandtoescpx
 %attr(755,root,root) %{_cups_serverbin}/filter/commandtopclx
@@ -376,6 +392,39 @@ fi
 %{_datadir}/cups/ppdc/pcl.h
 %{_datadir}/ppd/cupsfilters
 %{_mandir}/man1/foomatic-rip.1*
+
+%if %{with braille}
+%files braille
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_cups_serverbin}/filter/brftoembosser
+%attr(755,root,root) %{_cups_serverbin}/filter/imagetobrf
+%attr(755,root,root) %{_cups_serverbin}/filter/imagetoubrl
+%attr(755,root,root) %{_cups_serverbin}/filter/imageubrltoindexv3
+%attr(755,root,root) %{_cups_serverbin}/filter/imageubrltoindexv4
+%attr(755,root,root) %{_cups_serverbin}/filter/textbrftoindexv3
+%attr(755,root,root) %{_cups_serverbin}/filter/textbrftoindexv4
+%attr(755,root,root) %{_cups_serverbin}/filter/texttobrf
+%dir %{_datadir}/cups/braille
+%attr(755,root,root) %{_datadir}/cups/braille/cups-braille.sh
+%attr(755,root,root) %{_datadir}/cups/braille/index.sh
+%attr(755,root,root) %{_datadir}/cups/braille/indexv3.sh
+%attr(755,root,root) %{_datadir}/cups/braille/indexv4.sh
+%{_datadir}/cups/drv/generic-brf.drv
+%{_datadir}/cups/drv/indexv3.drv
+%{_datadir}/cups/drv/indexv4.drv
+%{_datadir}/cups/mime/braille.convs
+%{_datadir}/cups/mime/braille.types
+%{_datadir}/cups/ppdc/braille.defs
+%{_datadir}/cups/ppdc/fr-braille.po
+%{_datadir}/cups/ppdc/imagemagick.defs
+%{_datadir}/cups/ppdc/index.defs
+%{_datadir}/cups/ppdc/liblouis.defs
+%{_datadir}/cups/ppdc/liblouis1.defs
+%{_datadir}/cups/ppdc/liblouis2.defs
+%{_datadir}/cups/ppdc/liblouis3.defs
+%{_datadir}/cups/ppdc/liblouis4.defs
+%{_datadir}/cups/ppdc/media-braille.defs
+%endif
 
 %files libs
 %defattr(644,root,root,755)
