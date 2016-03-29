@@ -1,0 +1,230 @@
+--- cups-filters-1.8.2/scripting/php/phpcups.c.orig	2016-03-21 21:04:50.568131047 +0100
++++ cups-filters-1.8.2/scripting/php/phpcups.c	2016-03-28 21:51:56.884340677 +0200
+@@ -37,6 +37,16 @@
+ #  define CUPS_SVERSION CPPSTR(CUPS_VERSION_MAJOR) "." CPPSTR(CUPS_VERSION_MINOR) "." CPPSTR(CUPS_VERSION_PATCH)
+ #endif
+ 
++#if PHP_MAJOR_VERSION >= 7
++#  define php_add_property_string(arg, key, str, n) add_property_string(arg, key, str)
++#  define php_add_assoc_string(arg, key, str, n) add_assoc_string(arg, key, str)
++#  define PHP_RETURN_STRING(s, n) RETURN_STRING(s)
++#else
++#  define php_add_property_string(arg, key, str, n) add_property_string(arg, key, str, n)
++#  define php_add_assoc_string(arg, key, str, n) add_assoc_string(arg, key, str, n)
++#  define PHP_RETURN_STRING(s, n) RETURN_STRING(s, n)
++#endif
++
+ /*
+  * PHP function list...
+  */
+@@ -87,44 +97,70 @@
+ {
+   int		num_options;		/* Number of options */
+   HashTable	*ht;			/* Option array hash table */
+-  Bucket	*current;		/* Current element in array */
+   zval		*value;			/* Current value in array */
+   char		temp[255];		/* String value for numbers */
++#if PHP_MAJOR_VERSION >= 7
++  zend_string   *zkey;
++#else
++  Bucket	*current;		/* Current element in array */
++#endif
++  const char    *key;
+ 
+ 
+   ht          = Z_ARRVAL_P(optionsobj);
+   num_options = 0;
+ 
++#if PHP_MAJOR_VERSION >= 7
++  ZEND_HASH_FOREACH_STR_KEY_VAL(ht, zkey, value)
++    key = (const char*)&ZSTR_VAL(zkey);
++#else
+   for (current = ht->pListHead; current; current = current->pListNext)
+   {
+     value = (zval *)current->pDataPtr;
++    key = current->arKey;
++#endif
+ 
+     switch (Z_TYPE_P(value))
+     {
+       case IS_LONG :
+           sprintf(temp, "%ld", Z_LVAL_P(value));
+-          num_options = cupsAddOption(current->arKey, temp, num_options,
++          num_options = cupsAddOption(key, temp, num_options,
+ 	                              options);
+           break;
+ 
+       case IS_DOUBLE :
+           sprintf(temp, "%g", Z_DVAL_P(value));
+-          num_options = cupsAddOption(current->arKey, temp, num_options,
++          num_options = cupsAddOption(key, temp, num_options,
+ 	                              options);
+           break;
+ 
++#if PHP_MAJOR_VERSION >= 7
++      case IS_FALSE :
++          num_options = cupsAddOption(key, "false",
++				      num_options, options);
++          break;
++      case IS_TRUE :
++          num_options = cupsAddOption(key, "true",
++				      num_options, options);
++          break;
++#else
+       case IS_BOOL :
+-          num_options = cupsAddOption(current->arKey,
++          num_options = cupsAddOption(key,
+ 	                              Z_BVAL_P(value) ? "true" : "false",
+ 				      num_options, options);
+           break;
++#endif
+ 
+       case IS_STRING :
+-          num_options = cupsAddOption(current->arKey, Z_STRVAL_P(value),
++          num_options = cupsAddOption(key, Z_STRVAL_P(value),
+ 				      num_options, options);
+           break;
+     }
++#if PHP_MAJOR_VERSION >= 7
++  ZEND_HASH_FOREACH_END();
++#else
+   }
++#endif
+ 
+   return (num_options);
+ }
+@@ -244,6 +280,9 @@
+   cups_dest_t	*dests,			/* Destinations */
+ 		*dest;			/* Current destination */
+   cups_option_t	*option;		/* Current option */
++#if PHP_MAJOR_VERSION >= 7
++  zval		destobjs, optionsobjs;	/* storage for the below */
++#endif
+   zval		*destobj,		/* Destination object */
+ 		*optionsobj;		/* Options object */
+ 
+@@ -262,7 +301,11 @@
+   {
+     for (i = 0, dest = dests; i < num_dests; i ++, dest ++)
+     {
++#if PHP_MAJOR_VERSION >= 7
++      destobj = &destobjs;
++#else
+       MAKE_STD_ZVAL(destobj);
++#endif
+ 
+       if (object_init(destobj) == SUCCESS)
+       {
+@@ -271,8 +314,8 @@
+ 	* members...
+ 	*/
+ 
+-        add_property_string(destobj, "name", dest->name, 1);
+-        add_property_string(destobj, "instance",
++        php_add_property_string(destobj, "name", dest->name, 1);
++        php_add_property_string(destobj, "instance",
+ 	                    dest->instance ? dest->instance : "", 1);
+         add_property_long(destobj, "is_default", dest->is_default);
+ 
+@@ -280,14 +323,18 @@
+         * Create an associative array for the options...
+ 	*/
+ 
++#if PHP_MAJOR_VERSION >= 7
++	optionsobj = &optionsobjs;
++#else
+         MAKE_STD_ZVAL(optionsobj);
++#endif
+ 
+ 	if (array_init(optionsobj) == SUCCESS)
+ 	{
+ 	  for (j = 0, option = dest->options;
+ 	       j < dest->num_options;
+ 	       j ++, option ++)
+-	    add_assoc_string(optionsobj, option->name, option->value, 1);
++	    php_add_assoc_string(optionsobj, option->name, option->value, 1);
+ 
+ 	  add_property_zval(destobj, "options", optionsobj);
+ 	}
+@@ -316,7 +363,9 @@
+   cups_job_t	*jobs,			/* Jobs */
+ 		*job;			/* Current job */
+   zval		*jobobj;		/* Job object */
+-
++#if PHP_MAJOR_VERSION >= 7
++  zval		jobobjs;		/* Job object storage */
++#endif
+ 
+ 
+ 
+@@ -338,7 +387,11 @@
+   {
+     for (i = 0, job = jobs; i < num_jobs; i ++, job ++)
+     {
++#if PHP_MAJOR_VERSION >= 7
++      jobobj = &jobobjs;
++#else
+       MAKE_STD_ZVAL(jobobj);
++#endif
+ 
+       if (object_init(jobobj) == SUCCESS)
+       {
+@@ -348,10 +401,10 @@
+ 	*/
+ 
+         add_property_long(jobobj, "id", job->id);
+-        add_property_string(jobobj, "dest", job->dest, 1);
+-        add_property_string(jobobj, "title", job->title, 1);
+-        add_property_string(jobobj, "user", job->user, 1);
+-        add_property_string(jobobj, "format", job->format, 1);
++        php_add_property_string(jobobj, "dest", job->dest, 1);
++        php_add_property_string(jobobj, "title", job->title, 1);
++        php_add_property_string(jobobj, "user", job->user, 1);
++        php_add_property_string(jobobj, "format", job->format, 1);
+         add_property_long(jobobj, "state", job->state);
+         add_property_long(jobobj, "size", job->size);
+         add_property_long(jobobj, "priority", job->priority);
+@@ -394,7 +447,7 @@
+     WRONG_PARAM_COUNT;
+   }
+ 
+-  RETURN_STRING((char *)cupsLastErrorString(), 1);
++  PHP_RETURN_STRING((char *)cupsLastErrorString(), 1);
+ }
+ 
+ 
+@@ -451,7 +504,11 @@
+   int		num_options;		/* Number of options */
+   cups_option_t	*options;		/* Options */
+   HashTable	*ht2;			/* Option array hash table */
++#if PHP_MAJOR_VERSION >= 7
++  zval          *value;
++#else
+   Bucket	*current;		/* Current element in array */
++#endif
+   int		id;			/* Job ID */
+ 
+ 
+@@ -465,6 +522,14 @@
+   ht2       = Z_ARRVAL_P(filesobj);
+   num_files = 0;
+ 
++#if PHP_MAJOR_VERSION >= 7
++  ZEND_HASH_FOREACH_VAL(ht2, value)
++    files[num_files ++] = Z_STRVAL_P(value);
++
++    if (num_files >= (int)(sizeof(files) / sizeof(files[0])))
++      break;
++  ZEND_HASH_FOREACH_END();
++#else
+   for (current = ht2->pListHead; current; current = current->pListNext)
+   {
+     files[num_files ++] = Z_STRVAL_P(((zval *)current->pDataPtr));
+@@ -472,6 +537,7 @@
+     if (num_files >= (int)(sizeof(files) / sizeof(files[0])))
+       break;
+   }
++#endif
+ 
+   num_options = cups_convert_options(optionsobj, &options);
+ 

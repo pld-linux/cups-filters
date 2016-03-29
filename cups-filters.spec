@@ -11,7 +11,7 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.8.2
+Version:	1.8.3
 Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -25,9 +25,10 @@ Release:	1
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	a32a83aef1808e4ccabad96a593a9f89
+# Source0-md5:	6554a92ae338cbfe40a45819d65c3738
 Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
+Patch2:		%{name}-php7.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake >= 1:1.11
@@ -245,6 +246,7 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__aclocal}
@@ -387,6 +389,7 @@ fi
 %{_datadir}/cups/drv/cupsfilters.drv
 %{_datadir}/cups/mime/cupsfilters.types
 %{_datadir}/cups/mime/cupsfilters.convs
+%{_datadir}/cups/mime/cupsfilters-ghostscript.convs
 # definitions for drivers; pcl.h is used by cupsfilters.drv
 %{_datadir}/cups/ppdc/escp.h
 %{_datadir}/cups/ppdc/pcl.h
