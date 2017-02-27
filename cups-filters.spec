@@ -11,8 +11,8 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.8.3
-Release:	5
+Version:	1.13.4
+Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -25,7 +25,7 @@ Release:	5
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	6554a92ae338cbfe40a45819d65c3738
+# Source0-md5:	a288a63ca44ad6e776cf1e86a457f836
 Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
 Patch2:		%{name}-php7.patch
@@ -64,16 +64,17 @@ BuildRequires:	zlib-devel
 # DejaVuSans.ttf (testing font for test scripts)
 #BuildRequires:	fonts-TTF-DejaVu
 Requires:	%{name}-libs = %{version}-%{release}
+# pstopdf
+Requires:	bc
 Requires:	cups >= 1:1.6.0
 Requires:	fontconfig >= 2.0.0
 Requires:	ghostscript
+Requires:	grep
+Requires:	mupdf
 Requires:	poppler-progs >= 0.18
 Requires:	qpdf-libs >= 3.0.2
-Suggests:	fonts-TTF-freefont
-# pstopdf
-Requires:	bc
-Requires:	grep
 Requires:	sed
+Suggests:	fonts-TTF-freefont
 Provides:	cups-filter-foomatic
 Provides:	ghostscript-cups = 9.08
 Obsoletes:	cups-filter-foomatic
@@ -262,6 +263,7 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 	--with-pdftops=hybrid \
 	--with-rcdir=/etc/rc.d/init.d \
 	--with-rclevels= \
+	--with-mutool-path=/usr/bin/mutool \
 	--with-test-font-path=/usr/share/fonts/TTF/DejaVuSans.ttf
 
 %{__make}
@@ -346,30 +348,35 @@ fi
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING NEWS README
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
+%attr(755,root,root) %{_bindir}/driverless
 %attr(755,root,root) %{_bindir}/foomatic-rip
 %attr(755,root,root) %{_cups_serverbin}/backend/beh
+%attr(755,root,root) %{_cups_serverbin}/backend/driverless
+%attr(755,root,root) %{_cups_serverbin}/driver/driverless
 %attr(755,root,root) %{_cups_serverbin}/filter/bannertopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/commandtoescpx
 %attr(755,root,root) %{_cups_serverbin}/filter/commandtopclx
 %attr(755,root,root) %{_cups_serverbin}/filter/foomatic-rip
+%attr(755,root,root) %{_cups_serverbin}/filter/gstopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/gstopxl
 %attr(755,root,root) %{_cups_serverbin}/filter/gstoraster
 %attr(755,root,root) %{_cups_serverbin}/filter/imagetopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/imagetops
 %attr(755,root,root) %{_cups_serverbin}/filter/imagetoraster
+%attr(755,root,root) %{_cups_serverbin}/filter/mupdftoraster
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftoijs
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftoopvp
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftops
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftoraster
-%attr(755,root,root) %{_cups_serverbin}/filter/pstopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/rastertoescpx
 %attr(755,root,root) %{_cups_serverbin}/filter/rastertopclx
 %attr(755,root,root) %{_cups_serverbin}/filter/rastertopdf
+%attr(755,root,root) %{_cups_serverbin}/filter/rastertops
 %attr(755,root,root) %{_cups_serverbin}/filter/sys5ippprinter
-%attr(755,root,root) %{_cups_serverbin}/filter/textonly
 %attr(755,root,root) %{_cups_serverbin}/filter/texttopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/texttops
+%attr(755,root,root) %{_cups_serverbin}/filter/texttotext
 %attr(755,root,root) %{_cups_serverbin}/filter/urftopdf
 %{_datadir}/cups/banners/*
 %{_datadir}/cups/charsets
@@ -390,10 +397,13 @@ fi
 %{_datadir}/cups/mime/cupsfilters.types
 %{_datadir}/cups/mime/cupsfilters.convs
 %{_datadir}/cups/mime/cupsfilters-ghostscript.convs
+%{_datadir}/cups/mime/cupsfilters-mupdf.convs
+%{_datadir}/cups/mime/cupsfilters-poppler.convs
 # definitions for drivers; pcl.h is used by cupsfilters.drv
 %{_datadir}/cups/ppdc/escp.h
 %{_datadir}/cups/ppdc/pcl.h
 %{_datadir}/ppd/cupsfilters
+%{_mandir}/man1/driverless.1.gz
 %{_mandir}/man1/foomatic-rip.1*
 
 %if %{with braille}
