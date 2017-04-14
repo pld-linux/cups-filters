@@ -403,7 +403,7 @@ fi
 %{_datadir}/cups/ppdc/escp.h
 %{_datadir}/cups/ppdc/pcl.h
 %{_datadir}/ppd/cupsfilters
-%{_mandir}/man1/driverless.1.gz
+%{_mandir}/man1/driverless.1*
 %{_mandir}/man1/foomatic-rip.1*
 
 %if %{with braille}
