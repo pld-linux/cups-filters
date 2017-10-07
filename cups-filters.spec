@@ -11,8 +11,8 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.13.4
-Release:	6
+Version:	1.17.9
+Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -25,7 +25,7 @@ Release:	6
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	a288a63ca44ad6e776cf1e86a457f836
+# Source0-md5:	2ef5f2b902bcdcb963c5ef5858976bbc
 Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
 Patch2:		%{name}-php7.patch
@@ -351,11 +351,15 @@ fi
 %attr(755,root,root) %{_bindir}/driverless
 %attr(755,root,root) %{_bindir}/foomatic-rip
 %attr(755,root,root) %{_cups_serverbin}/backend/beh
+%attr(755,root,root) %{_cups_serverbin}/backend/cups-brf
 %attr(755,root,root) %{_cups_serverbin}/backend/driverless
 %attr(755,root,root) %{_cups_serverbin}/driver/driverless
 %attr(755,root,root) %{_cups_serverbin}/filter/bannertopdf
+%attr(755,root,root) %{_cups_serverbin}/filter/cgmtopdf
+%attr(755,root,root) %{_cups_serverbin}/filter/cmxtopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/commandtoescpx
 %attr(755,root,root) %{_cups_serverbin}/filter/commandtopclx
+%attr(755,root,root) %{_cups_serverbin}/filter/emftopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/foomatic-rip
 %attr(755,root,root) %{_cups_serverbin}/filter/gstopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/gstopxl
@@ -364,20 +368,27 @@ fi
 %attr(755,root,root) %{_cups_serverbin}/filter/imagetops
 %attr(755,root,root) %{_cups_serverbin}/filter/imagetoraster
 %attr(755,root,root) %{_cups_serverbin}/filter/mupdftoraster
+%attr(755,root,root) %{_cups_serverbin}/filter/musicxmltobrf
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftoijs
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftoopvp
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftops
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftoraster
 %attr(755,root,root) %{_cups_serverbin}/filter/rastertoescpx
+%attr(755,root,root) %{_cups_serverbin}/filter/rastertopclm
 %attr(755,root,root) %{_cups_serverbin}/filter/rastertopclx
 %attr(755,root,root) %{_cups_serverbin}/filter/rastertopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/rastertops
+%attr(755,root,root) %{_cups_serverbin}/filter/svgtopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/sys5ippprinter
 %attr(755,root,root) %{_cups_serverbin}/filter/texttopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/texttops
 %attr(755,root,root) %{_cups_serverbin}/filter/texttotext
-%attr(755,root,root) %{_cups_serverbin}/filter/urftopdf
+%attr(755,root,root) %{_cups_serverbin}/filter/vectortobrf
+%attr(755,root,root) %{_cups_serverbin}/filter/vectortopdf
+%attr(755,root,root) %{_cups_serverbin}/filter/vectortoubrl
+%attr(755,root,root) %{_cups_serverbin}/filter/wmftopdf
+%attr(755,root,root) %{_cups_serverbin}/filter/xfigtopdf
 %{_datadir}/cups/banners/*
 %{_datadir}/cups/charsets
 %{_datadir}/cups/data/classified.pdf
@@ -394,6 +405,7 @@ fi
 %{_datadir}/cups/data/unclassified.pdf
 %{_datadir}/cups/data/testprint
 %{_datadir}/cups/drv/cupsfilters.drv
+%{_datadir}/cups/drv/generic-ubrl.drv
 %{_datadir}/cups/mime/cupsfilters.types
 %{_datadir}/cups/mime/cupsfilters.convs
 %{_datadir}/cups/mime/cupsfilters-ghostscript.convs
