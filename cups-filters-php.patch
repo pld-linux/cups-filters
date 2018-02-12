@@ -19,7 +19,7 @@
 -libphpcups_la_LDFLAGS = -no-undefined
 +libphpcups_la_CFLAGS = $(CUPS_CFLAGS) $(PHP_CFLAGS)
 +libphpcups_la_LDFLAGS = -module -avoid-version -shared -no-undefined
- endif # WITH_PHP
+ 
  
 --- cups-filters-1.0.41/scripting/php/phpcups.c.orig	2012-06-22 18:10:47.000000000 +0200
 +++ cups-filters-1.0.41/scripting/php/phpcups.c	2013-12-01 10:50:16.171425151 +0100
