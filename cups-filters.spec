@@ -29,6 +29,7 @@ Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.ta
 Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
 Patch2:		%{name}-php7.patch
+Patch3:		%{name}-poppler.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake >= 1:1.11
@@ -248,6 +249,7 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
 
 %build
 %{__aclocal}
