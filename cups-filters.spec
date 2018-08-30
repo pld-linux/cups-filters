@@ -11,7 +11,7 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.20.4
+Version:	1.21.1
 Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -25,7 +25,7 @@ Release:	1
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	173045bbc4bca59230543f225b8fa16c
+# Source0-md5:	60a27b6420703a33332f3243f43c9a62
 Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
 Patch2:		%{name}-php7.patch
@@ -58,7 +58,7 @@ BuildRequires:	poppler-cpp-devel >= 0.18
 BuildRequires:	poppler-devel >= 0.18
 # /usr/bin/pdftops, for features detection
 BuildRequires:	poppler-progs >= 0.18
-BuildRequires:	qpdf-devel >= 3.0.2
+BuildRequires:	qpdf-devel >= 8.1.0
 BuildRequires:	rpmbuild(macros) >= 1.671
 BuildRequires:	zlib-devel
 # DejaVuSans.ttf (testing font for test scripts)
@@ -72,7 +72,7 @@ Requires:	ghostscript
 Requires:	grep
 Requires:	mupdf
 Requires:	poppler-progs >= 0.18
-Requires:	qpdf-libs >= 3.0.2
+Requires:	qpdf-libs >= 8.1.0
 Requires:	sed
 Suggests:	fonts-TTF-freefont
 Provides:	cups-filter-foomatic
