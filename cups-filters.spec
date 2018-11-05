@@ -4,15 +4,16 @@
 %bcond_without	braille		# Braille embossers support
 %bcond_without	perl		# Perl module
 %bcond_without	php		# PHP extension
+%bcond_with	system_php	# Build against PHP version installed in system
 
-%if 0%{!?php_name:1}
+%if %{without system_php}
 %define		php_name	php55
 %endif
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
 Version:	1.21.3
-Release:	1
+Release:	2
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
