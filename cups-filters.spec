@@ -12,7 +12,7 @@ Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
 Version:	1.21.6
-Release:	1
+Release:	2
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -30,6 +30,7 @@ Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
 Patch2:		%{name}-php7.patch
 Patch3:		%{name}-php73.patch
+Patch4:		%{name}-poppler.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake >= 1:1.11
@@ -56,7 +57,7 @@ BuildRequires:	openldap-devel
 BuildRequires:	pkgconfig >= 1:0.20
 # just for cpp/poppler-version.h
 BuildRequires:	poppler-cpp-devel >= 0.18
-BuildRequires:	poppler-devel >= 0.18
+BuildRequires:	poppler-devel >= 0.72.0
 # /usr/bin/pdftops, for features detection
 BuildRequires:	poppler-progs >= 0.18
 BuildRequires:	qpdf-devel >= 8.1.0
@@ -250,6 +251,7 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 %{__aclocal}
