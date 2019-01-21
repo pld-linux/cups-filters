@@ -11,8 +11,8 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.21.6
-Release:	2
+Version:	1.22.0
+Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -25,12 +25,11 @@ Release:	2
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	852a18e51051e44a5993012e98e4e7b3
+# Source0-md5:	7328b709f21d97486aad137de137d285
 Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
 Patch2:		%{name}-php7.patch
 Patch3:		%{name}-php73.patch
-Patch4:		%{name}-poppler.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake >= 1:1.11
@@ -56,11 +55,11 @@ BuildRequires:	openldap-devel
 %{?with_perl:BuildRequires:	perl-devel}
 BuildRequires:	pkgconfig >= 1:0.20
 # just for cpp/poppler-version.h
-BuildRequires:	poppler-cpp-devel >= 0.18
-BuildRequires:	poppler-devel >= 0.72.0
+BuildRequires:	poppler-cpp-devel >= 0.19
+BuildRequires:	poppler-devel >= 0.19
 # /usr/bin/pdftops, for features detection
-BuildRequires:	poppler-progs >= 0.18
-BuildRequires:	qpdf-devel >= 8.1.0
+BuildRequires:	poppler-progs >= 0.19
+BuildRequires:	qpdf-devel >= 8.3.0
 BuildRequires:	rpmbuild(macros) >= 1.671
 BuildRequires:	zlib-devel
 # DejaVuSans.ttf (testing font for test scripts)
@@ -73,8 +72,9 @@ Requires:	fontconfig >= 2.0.0
 Requires:	ghostscript
 Requires:	grep
 Requires:	mupdf
-Requires:	poppler-progs >= 0.18
-Requires:	qpdf-libs >= 8.1.0
+Requires:	poppler >= 0.19
+Requires:	poppler-progs >= 0.19
+Requires:	qpdf-libs >= 8.3.0
 Requires:	sed
 Suggests:	fonts-TTF-freefont
 Provides:	cups-filter-foomatic
@@ -251,7 +251,6 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 %build
 %{__aclocal}
