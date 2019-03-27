@@ -1,0 +1,420 @@
+--- cups-filters-1.22.2/filter/pdftoopvp/oprs/OPVPSplashClip.cxx.orig	2019-03-15 19:53:00.000000000 +0100
++++ cups-filters-1.22.2/filter/pdftoopvp/oprs/OPVPSplashClip.cxx	2019-03-27 17:10:02.624632722 +0100
+@@ -32,15 +32,15 @@
+   int i,j;
+   int y, x0, x1;
+   int txMin, tyMin, txMax, tyMax;
+-  Guchar *cbuf,*tbuf;
++  unsigned char *cbuf,*tbuf;
+   int blen;
+   OPVPSplashPath *p = new OPVPSplashPath();
+ 
+   getBBox(&txMin,&tyMin,&txMax,&tyMax);
+   if (txMin > txMax || tyMin > tyMax) return p;
+   blen = txMax-txMin+1;
+-  cbuf = new Guchar[blen];
+-  tbuf = new Guchar[blen];
++  cbuf = new unsigned char[blen];
++  tbuf = new unsigned char[blen];
+ 
+   for (y = tyMin;y <= tyMax;y++) {
+     /* clear buffer */
+--- cups-filters-1.22.2/filter/pdftoopvp/oprs/OPVPSplash.cxx.orig	2019-03-15 19:53:00.000000000 +0100
++++ cups-filters-1.22.2/filter/pdftoopvp/oprs/OPVPSplash.cxx	2019-03-27 17:10:35.447788237 +0100
+@@ -1036,7 +1036,7 @@
+   opvp_fix_t opvpx,opvpy;
+   int opvpbytes;
+   int x0, y0;
+-  Guchar *bp;
++  unsigned char *bp;
+   SplashClipResult clipRes;
+   SplashCoord xt, yt;
+ 
+@@ -1060,7 +1060,7 @@
+     
+     opvpbytes = (m+3)/4;
+     opvpbytes *= 4;
+-    bp = (Guchar *)gmallocn(glyph->h,opvpbytes);
++    bp = (unsigned char *)gmallocn(glyph->h,opvpbytes);
+     for (i = 0;i < glyph->h;i++) {
+       memcpy(bp+i*opvpbytes,glyph->data+i*m,m);
+     }
+@@ -1196,7 +1196,7 @@
+   opvp_fix_t opvpx,opvpy;
+   int opvpbytes;
+   opvp_ctm_t opvpctm;
+-  Guchar *buf = 0, *bp;
++  unsigned char *buf = 0, *bp;
+   SplashError result = splashOk;
+   SplashColorPtr lineBuf;
+ 
+@@ -1204,7 +1204,7 @@
+   /* align 4 */
+   opvpbytes = (opvpbytes+3)/4;
+   opvpbytes *= 4;
+-  buf = (Guchar *)gmallocn(h,opvpbytes);
++  buf = (unsigned char *)gmallocn(h,opvpbytes);
+   lineBuf = (SplashColorPtr)gmallocn(8,opvpbytes);
+ 
+   for (i = 0;i < h;i++) {
+@@ -1213,7 +1213,7 @@
+     bp = buf+opvpbytes*i;
+     (*src)(srcData, lineBuf);
+     for (j = 0;j < w;j += k) {
+-      Guchar d;
++      unsigned char d;
+ 
+       d = 0;
+       for (k = 0;k < 8 && j+k < w;k++) {
+@@ -1467,7 +1467,7 @@
+   int opvpbytes, linesize;
+   opvp_ctm_t opvpctm;
+   SplashError result = splashOk;
+-  Guchar *buf = 0, *bp;
++  unsigned char *buf = 0, *bp;
+   SplashColorPtr lineBuf = 0, color;
+   float e,f;
+   int hs,he, hstep;
+@@ -1537,7 +1537,7 @@
+     hs = h-1;
+     he = -1;
+   }
+-  buf = (Guchar *)gmallocn(h,opvpbytes);
++  buf = (unsigned char *)gmallocn(h,opvpbytes);
+   lineBuf = (SplashColorPtr)gmallocn(lineBufSize,1);
+   switch (colorMode) {
+   case splashModeMono1:
+@@ -1682,7 +1682,7 @@
+   opvp_fix_t opvpx,opvpy;
+   int opvpbytes;
+   opvp_ctm_t opvpctm;
+-  Guchar *buf = 0, *bp;
++  unsigned char *buf = 0, *bp;
+ 
+   switch (colorMode) {
+   case splashModeMono1:
+@@ -1699,7 +1699,7 @@
+     return splashErrOPVP;
+     break;
+   }
+-  buf = (Guchar *)gmallocn(h,opvpbytes);
++  buf = (unsigned char *)gmallocn(h,opvpbytes);
+ 
+   switch (colorMode) {
+   case splashModeMono1:
+@@ -1929,8 +1929,8 @@
+     p += linesize;
+   }
+   /* allocate line buffer */
+-  Guchar *lineBuf = (Guchar *)gmallocn(opvpbytes,1);
+-  Guchar *onBuf = (Guchar *)gmallocn(width,1);
++  unsigned char *lineBuf = (unsigned char *)gmallocn(opvpbytes,1);
++  unsigned char *onBuf = (unsigned char *)gmallocn(width,1);
+   OPVPSplashClip *clip;
+   opvpctm.a = 1.0;
+   opvpctm.b = 0.0;
+@@ -2025,7 +2025,7 @@
+       /* find end pixel */
+       for (ex = sx+1;onBuf[ex] != 0 && ex < width;ex++);
+       int n = ex-sx;
+-      Guchar *bp;
++      unsigned char *bp;
+       int ns;
+ 
+       switch (colorMode) {
+--- cups-filters-1.22.2/filter/pdftoopvp/OPVPOutputDev.h.orig	2019-03-15 19:53:00.000000000 +0100
++++ cups-filters-1.22.2/filter/pdftoopvp/OPVPOutputDev.h	2019-03-27 17:11:39.447441521 +0100
+@@ -15,7 +15,6 @@
+ #pragma interface
+ #endif
+ 
+-#include "goo/gtypes.h"
+ #include "splash/SplashTypes.h"
+ #include "config.h"
+ #include "OutputDev.h"
+@@ -195,18 +194,18 @@
+   SplashPattern *getColor(GfxGray gray, GfxRGB *rgb);
+   OPVPSplashPath *convertPath(GfxState *state, GfxPath *path);
+   void drawType3Glyph(T3FontCache *t3Font,
+-		      T3FontCacheTag *tag, Guchar *data,
++		      T3FontCacheTag *tag, unsigned char *data,
+ 		      double x, double y);
+   void patternFillChar(GfxState *state,
+     double x, double y, CharCode code);
+ 
+   static bool imageMaskSrc(void *data, SplashColorPtr line);
+   static bool imageSrc(void *data, SplashColorPtr line,
+-                              Guchar *alphaLine);
++                              unsigned char *alphaLine);
+   static bool alphaImageSrc(void *data, SplashColorPtr line,
+-                              Guchar *alphaLine);
++                              unsigned char *alphaLine);
+   static bool maskedImageSrc(void *data, SplashColorPtr line,
+-                              Guchar *alphaLine);
++                              unsigned char *alphaLine);
+ 
+   OPVPSplashPath *bitmapToPath(SplashBitmap *bitmapA, int width, int height);
+   void closeAllSubPath(OPVPSplashPath *path);
+--- cups-filters-1.22.2/filter/pdftoopvp/OPVPOutputDev.cxx.orig	2019-03-15 19:53:00.000000000 +0100
++++ cups-filters-1.22.2/filter/pdftoopvp/OPVPOutputDev.cxx	2019-03-27 17:12:06.283962802 +0100
+@@ -89,8 +89,8 @@
+ //------------------------------------------------------------------------
+ 
+ struct T3FontCacheTag {
+-  Gushort code;
+-  Gushort mru;			// valid bit (0x8000) and MRU index
++  unsigned short code;
++  unsigned short mru;			// valid bit (0x8000) and MRU index
+ };
+ 
+ class T3FontCache {
+@@ -113,7 +113,7 @@
+   int glyphSize;		// size of glyph bitmaps, in bytes
+   int cacheSets;		// number of sets in cache
+   int cacheAssoc;		// cache associativity (glyphs per set)
+-  Guchar *cacheData;		// glyph pixmap cache
++  unsigned char *cacheData;		// glyph pixmap cache
+   T3FontCacheTag *cacheTags;	// cache tags, i.e., char codes
+ };
+ 
+@@ -147,7 +147,7 @@
+   } else {
+     cacheSets = 1;
+   }
+-  cacheData = (Guchar *)gmallocn3(cacheSets , cacheAssoc , glyphSize);
++  cacheData = (unsigned char *)gmallocn3(cacheSets , cacheAssoc , glyphSize);
+   cacheTags = (T3FontCacheTag *)gmallocn3(cacheSets , cacheAssoc ,
+ 					sizeof(T3FontCacheTag));
+   for (i = 0; i < cacheSets * cacheAssoc; ++i) {
+@@ -161,13 +161,13 @@
+ }
+ 
+ struct T3GlyphStack {
+-  Gushort code;			// character code
++  unsigned short code;			// character code
+   double x, y;			// position to draw the glyph
+ 
+   //----- cache info
+   T3FontCache *cache;		// font cache for the current font
+   T3FontCacheTag *cacheTag;	// pointer to cache tag for the glyph
+-  Guchar *cacheData;		// pointer to cache data for the glyph
++  unsigned char *cacheData;		// pointer to cache data for the glyph
+ 
+   //----- saved state
+   SplashBitmap *origBitmap;
+@@ -1010,7 +1010,7 @@
+ }
+ 
+ void OPVPOutputDev::drawType3Glyph(T3FontCache *t3Font,
+-				     T3FontCacheTag *tag, Guchar *data,
++				     T3FontCacheTag *tag, unsigned char *data,
+ 				     double x, double y) {
+   SplashGlyphBitmap glyph;
+ 
+@@ -1040,7 +1040,7 @@
+ 
+ bool OPVPOutputDev::imageMaskSrc(void *data, SplashColorPtr line) {
+   SplashOutImageMaskData *imgMaskData = (SplashOutImageMaskData *)data;
+-  Guchar *p;
++  unsigned char *p;
+   SplashColorPtr q;
+   int x;
+ 
+@@ -1101,10 +1101,10 @@
+ };
+ 
+ bool OPVPOutputDev::imageSrc(void *data, SplashColorPtr line,
+-                              Guchar *alphaLine)
++                              unsigned char *alphaLine)
+ {
+   SplashOutImageData *imgData = (SplashOutImageData *)data;
+-  Guchar *p;
++  unsigned char *p;
+   SplashColorPtr q, col;
+   GfxRGB rgb;
+   GfxGray gray;
+@@ -1212,16 +1212,16 @@
+ }
+ 
+ bool OPVPOutputDev::alphaImageSrc(void *data, SplashColorPtr line,
+-                                  Guchar *alphaLine) {
++                                  unsigned char *alphaLine) {
+   SplashOutImageData *imgData = (SplashOutImageData *)data;
+-  Guchar *p;
++  unsigned char *p;
+   SplashColorPtr q, col;
+   GfxRGB rgb;
+   GfxGray gray;
+ #if SPLASH_CMYK
+   GfxCMYK cmyk;
+ #endif
+-  Guchar alpha;
++  unsigned char alpha;
+   int nComps, x, i;
+ 
+   if (imgData->y == imgData->height) {
+@@ -1334,7 +1334,7 @@
+ #if SPLASH_CMYK
+   GfxCMYK cmyk;
+ #endif
+-  Guchar pix;
++  unsigned char pix;
+   int n, i;
+ 
+   ctm = state->getCTM();
+@@ -1366,7 +1366,7 @@
+     case splashModeMono8:
+       imgData.lookup = (SplashColorPtr)gmallocn(n,1);
+       for (i = 0; i < n; ++i) {
+-	pix = (Guchar)i;
++	pix = (unsigned char)i;
+ 	colorMap->getGray(&pix, &gray);
+ 	imgData.lookup[i] = colToByte(gray);
+       }
+@@ -1374,7 +1374,7 @@
+     case splashModeRGB8:
+       imgData.lookup = (SplashColorPtr)gmallocn(n,3);
+       for (i = 0; i < n; ++i) {
+-	pix = (Guchar)i;
++	pix = (unsigned char)i;
+ 	colorMap->getRGB(&pix, &rgb);
+ 	imgData.lookup[3*i] = colToByte(rgb.r);
+ 	imgData.lookup[3*i+1] = colToByte(rgb.g);
+@@ -1384,7 +1384,7 @@
+     case splashModeBGR8:
+       imgData.lookup = (SplashColorPtr)gmallocn(n,3);
+       for (i = 0; i < n; ++i) {
+-	pix = (Guchar)i;
++	pix = (unsigned char)i;
+ 	colorMap->getRGB(&pix, &rgb);
+ 	imgData.lookup[3*i] = colToByte(rgb.b);
+ 	imgData.lookup[3*i+1] = colToByte(rgb.g);
+@@ -1395,7 +1395,7 @@
+     case splashModeCMYK8:
+       imgData.lookup = (SplashColorPtr)gmallocn(n,4);
+       for (i = 0; i < n; ++i) {
+-	pix = (Guchar)i;
++	pix = (unsigned char)i;
+ 	colorMap->getCMYK(&pix, &cmyk);
+ 	imgData.lookup[4*i] = colToByte(cmyk.c);
+ 	imgData.lookup[4*i+1] = colToByte(cmyk.m);
+@@ -1440,9 +1440,9 @@
+ };
+ 
+ bool OPVPOutputDev::maskedImageSrc(void *data, SplashColorPtr line,
+-     Guchar *alphaLine) {
++     unsigned char *alphaLine) {
+   SplashOutMaskedImageData *imgData = (SplashOutMaskedImageData *)data;
+-  Guchar *p;
++  unsigned char *p;
+   SplashColor maskColor;
+   SplashColorPtr q, col;
+   GfxRGB rgb;
+@@ -1450,7 +1450,7 @@
+ #if SPLASH_CMYK
+   GfxCMYK cmyk;
+ #endif
+-  Guchar alpha;
++  unsigned char alpha;
+   int nComps, x;
+ 
+   if (imgData->y == imgData->height) {
+@@ -1562,7 +1562,7 @@
+ #if SPLASH_CMYK
+   GfxCMYK cmyk;
+ #endif
+-  Guchar pix;
++  unsigned char pix;
+   int n, i;
+ 
+   //----- scale the mask image to the same size as the source image
+@@ -1622,7 +1622,7 @@
+     case splashModeMono8:
+       imgData.lookup = (SplashColorPtr)gmallocn(n,1);
+       for (i = 0; i < n; ++i) {
+-	pix = (Guchar)i;
++	pix = (unsigned char)i;
+ 	colorMap->getGray(&pix, &gray);
+ 	imgData.lookup[i] = colToByte(gray);
+       }
+@@ -1630,7 +1630,7 @@
+     case splashModeRGB8:
+       imgData.lookup = (SplashColorPtr)gmallocn(n,3);
+       for (i = 0; i < n; ++i) {
+-	pix = (Guchar)i;
++	pix = (unsigned char)i;
+ 	colorMap->getRGB(&pix, &rgb);
+ 	imgData.lookup[3*i] = colToByte(rgb.r);
+ 	imgData.lookup[3*i+1] = colToByte(rgb.g);
+@@ -1640,7 +1640,7 @@
+     case splashModeBGR8:
+       imgData.lookup = (SplashColorPtr)gmallocn(n,3);
+       for (i = 0; i < n; ++i) {
+-	pix = (Guchar)i;
++	pix = (unsigned char)i;
+ 	colorMap->getRGB(&pix, &rgb);
+ 	imgData.lookup[3*i] = colToByte(rgb.b);
+ 	imgData.lookup[3*i+1] = colToByte(rgb.g);
+@@ -1651,7 +1651,7 @@
+     case splashModeCMYK8:
+       imgData.lookup = (SplashColorPtr)gmallocn(n,4);
+       for (i = 0; i < n; ++i) {
+-	pix = (Guchar)i;
++	pix = (unsigned char)i;
+ 	colorMap->getCMYK(&pix, &cmyk);
+ 	imgData.lookup[4*i] = colToByte(cmyk.c);
+ 	imgData.lookup[4*i+1] = colToByte(cmyk.m);
+@@ -1717,7 +1717,7 @@
+ #if SPLASH_CMYK
+   GfxCMYK cmyk;
+ #endif
+-  Guchar pix;
++  unsigned char pix;
+   int n, i;
+ 
+   ctm = state->getCTM();
+@@ -1743,7 +1743,7 @@
+   n = 1 << maskColorMap->getBits();
+   imgMaskData.lookup = (SplashColorPtr)gmallocn(n,1);
+   for (i = 0; i < n; ++i) {
+-    pix = (Guchar)i;
++    pix = (unsigned char)i;
+     maskColorMap->getGray(&pix, &gray);
+     imgMaskData.lookup[i] = colToByte(gray);
+   }
+@@ -1793,7 +1793,7 @@
+     case splashModeMono8:
+       imgData.lookup = (SplashColorPtr)gmallocn(n,1);
+       for (i = 0; i < n; ++i) {
+-	pix = (Guchar)i;
++	pix = (unsigned char)i;
+ 	colorMap->getGray(&pix, &gray);
+ 	imgData.lookup[i] = colToByte(gray);
+       }
+@@ -1801,7 +1801,7 @@
+     case splashModeRGB8:
+       imgData.lookup = (SplashColorPtr)gmallocn(n,3);
+       for (i = 0; i < n; ++i) {
+-	pix = (Guchar)i;
++	pix = (unsigned char)i;
+ 	colorMap->getRGB(&pix, &rgb);
+ 	imgData.lookup[3*i] = colToByte(rgb.r);
+ 	imgData.lookup[3*i+1] = colToByte(rgb.g);
+@@ -1811,7 +1811,7 @@
+     case splashModeBGR8:
+       imgData.lookup = (SplashColorPtr)gmallocn(n,3);
+       for (i = 0; i < n; ++i) {
+-	pix = (Guchar)i;
++	pix = (unsigned char)i;
+ 	colorMap->getRGB(&pix, &rgb);
+ 	imgData.lookup[3*i] = colToByte(rgb.b);
+ 	imgData.lookup[3*i+1] = colToByte(rgb.g);
+@@ -1822,7 +1822,7 @@
+     case splashModeCMYK8:
+       imgData.lookup = (SplashColorPtr)gmallocn(n,4);
+       for (i = 0; i < n; ++i) {
+-	pix = (Guchar)i;
++	pix = (unsigned char)i;
+ 	colorMap->getCMYK(&pix, &cmyk);
+ 	imgData.lookup[4*i] = colToByte(cmyk.c);
+ 	imgData.lookup[4*i+1] = colToByte(cmyk.m);

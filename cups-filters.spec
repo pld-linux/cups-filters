@@ -30,6 +30,7 @@ Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
 Patch2:		%{name}-php7.patch
 Patch3:		%{name}-php73.patch
+Patch4:		%{name}-poppler.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake >= 1:1.11
@@ -48,7 +49,7 @@ BuildRequires:	lcms2-devel >= 2
 BuildRequires:	libjpeg-devel
 %{?with_braille:BuildRequires:	liblouis-devel}
 BuildRequires:	libpng-devel
-BuildRequires:	libstdc++-devel
+BuildRequires:	libstdc++-devel >= 6:4.7
 BuildRequires:	libtiff-devel
 BuildRequires:	libtool
 BuildRequires:	openldap-devel
@@ -251,6 +252,7 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 %{__aclocal}
