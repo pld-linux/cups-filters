@@ -11,7 +11,7 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.23.0
+Version:	1.25.0
 Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -21,16 +21,15 @@ Release:	1
 # GPLv3:   filters: bannertopdf
 # GPLv3+:  filters: urftopdf
 # LGPLv2+:   utils: cups-browsed
-# MIT:     filters: gstoraster, pdftoijs, pdftoopvp, pdftopdf, pdftoraster
+# MIT:     filters: gstoraster, pdftopdf, pdftoraster
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	45a0ccc742d50e51c90e4b8ec1e8be5c
+# Source0-md5:	c3fbc78eed88f33b8d5cb10784f3efbc
 Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
 Patch2:		%{name}-php7.patch
 Patch3:		%{name}-php73.patch
-Patch4:		%{name}-poppler.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake >= 1:1.11
@@ -55,9 +54,7 @@ BuildRequires:	libtool
 BuildRequires:	openldap-devel
 %{?with_perl:BuildRequires:	perl-devel}
 BuildRequires:	pkgconfig >= 1:0.20
-# just for cpp/poppler-version.h
 BuildRequires:	poppler-cpp-devel >= 0.19
-BuildRequires:	poppler-devel >= 0.19
 # /usr/bin/pdftops, for features detection
 BuildRequires:	poppler-progs >= 0.19
 BuildRequires:	qpdf-devel >= 8.3.0
@@ -252,7 +249,6 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 %build
 %{__aclocal}
@@ -354,7 +350,6 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING NEWS README
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/fonts/conf.d/99pdftoopvp.conf
 %attr(755,root,root) %{_bindir}/driverless
 %attr(755,root,root) %{_bindir}/foomatic-rip
 %attr(755,root,root) %{_cups_serverbin}/backend/beh
@@ -377,8 +372,6 @@ fi
 %attr(755,root,root) %{_cups_serverbin}/filter/imagetoraster
 %attr(755,root,root) %{_cups_serverbin}/filter/mupdftoraster
 %attr(755,root,root) %{_cups_serverbin}/filter/musicxmltobrf
-%attr(755,root,root) %{_cups_serverbin}/filter/pdftoijs
-%attr(755,root,root) %{_cups_serverbin}/filter/pdftoopvp
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftops
 %attr(755,root,root) %{_cups_serverbin}/filter/pdftoraster
