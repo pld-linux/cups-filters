@@ -12,7 +12,7 @@ Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
 Version:	1.27.0
-Release:	1
+Release:	2
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -352,9 +352,10 @@ fi
 %doc AUTHORS COPYING NEWS README
 %attr(755,root,root) %{_bindir}/driverless
 %attr(755,root,root) %{_bindir}/foomatic-rip
-%attr(755,root,root) %{_cups_serverbin}/backend/beh
-%attr(755,root,root) %{_cups_serverbin}/backend/cups-brf
-%attr(755,root,root) %{_cups_serverbin}/backend/driverless
+%attr(700,root,root) %{_cups_serverbin}/backend/beh
+%attr(700,root,root) %{_cups_serverbin}/backend/cups-brf
+%attr(700,root,root) %{_cups_serverbin}/backend/driverless
+%attr(700,root,root) %{_cups_serverbin}/backend/implicitclass
 %attr(755,root,root) %{_cups_serverbin}/driver/driverless
 %attr(755,root,root) %{_cups_serverbin}/filter/bannertopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/brftopagedbrf
@@ -478,7 +479,6 @@ fi
 %defattr(644,root,root,755)
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/cups/cups-browsed.conf
 %attr(755,root,root) %{_sbindir}/cups-browsed
-%attr(755,root,root) %{_cups_serverbin}/backend/implicitclass
 %attr(754,root,root) /etc/rc.d/init.d/cups-browsed
 %{systemdunitdir}/cups-browsed.service
 %{_mandir}/man5/cups-browsed.conf.5*
@@ -486,11 +486,11 @@ fi
 
 %files -n cups-backend-parallel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_cups_serverbin}/backend/parallel
+%attr(700,root,root) %{_cups_serverbin}/backend/parallel
 
 %files -n cups-backend-serial
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_cups_serverbin}/backend/serial
+%attr(700,root,root) %{_cups_serverbin}/backend/serial
 
 %if %{with perl}
 %files -n perl-cups
