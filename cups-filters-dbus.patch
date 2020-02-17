@@ -2,13 +2,14 @@ diff -up cups-filters-1.0.41/Makefile.am.dbus cups-filters-1.0.41/Makefile.am
 --- cups-filters-1.0.41/Makefile.am.dbus	2013-10-25 14:12:56.000000000 +0100
 +++ cups-filters-1.0.41/Makefile.am	2013-11-06 17:16:58.504234619 +0000
 @@ -474,9 +474,11 @@ gstoraster_SOURCES = \
- 	cupsfilters/raster.h
  gstoraster_CFLAGS = \
  	$(CUPS_CFLAGS) \
+ 	$(LIBQPDF_CFLAGS) \
 +	$(DBUS_CFLAGS) \
  	-I$(srcdir)/cupsfilters/
  gstoraster_LDADD = \
  	$(CUPS_LIBS) \
+ 	$(LIBQPDF_LIBS) \
 +	$(DBUS_LIBS) \
  	libcupsfilters.la
  
