@@ -11,7 +11,7 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.27.5
+Version:	1.28.0
 Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -25,7 +25,7 @@ Release:	1
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	765bc236257811864fa19736417add59
+# Source0-md5:	9940ded952df81d40cd1973b493e054d
 Patch0:		%{name}-dbus.patch
 Patch1:		%{name}-php.patch
 Patch2:		%{name}-php7.patch
@@ -42,7 +42,6 @@ BuildRequires:	freetype-devel >= 2
 # /usr/bin/gs, for features detection
 %{?with_php:BuildRequires:	%{php_name}-devel}
 BuildRequires:	ghostscript
-BuildRequires:	ghostscript-ijs-devel
 BuildRequires:	glib2-devel >= 1:2.30.2
 BuildRequires:	lcms2-devel >= 2
 BuildRequires:	libjpeg-devel
@@ -258,8 +257,6 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 %configure \
 	%{!?with_braille:--disable-braille} \
 	--enable-dbus \
-	--enable-ijs \
-	--enable-opvp \
 	--disable-silent-rules \
 	%{!?with_static_libs:--disable-static} \
 	%{?with_php:--with-php} \
@@ -351,12 +348,15 @@ fi
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING NEWS README
 %attr(755,root,root) %{_bindir}/driverless
+%attr(755,root,root) %{_bindir}/driverless-fax
 %attr(755,root,root) %{_bindir}/foomatic-rip
 %attr(700,root,root) %{_cups_serverbin}/backend/beh
 %attr(700,root,root) %{_cups_serverbin}/backend/cups-brf
 %attr(700,root,root) %{_cups_serverbin}/backend/driverless
+%attr(700,root,root) %{_cups_serverbin}/backend/driverless-fax
 %attr(700,root,root) %{_cups_serverbin}/backend/implicitclass
 %attr(755,root,root) %{_cups_serverbin}/driver/driverless
+%attr(755,root,root) %{_cups_serverbin}/driver/driverless-fax
 %attr(755,root,root) %{_cups_serverbin}/filter/bannertopdf
 %attr(755,root,root) %{_cups_serverbin}/filter/brftopagedbrf
 %attr(755,root,root) %{_cups_serverbin}/filter/cgmtopdf
