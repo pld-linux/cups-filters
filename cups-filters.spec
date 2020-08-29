@@ -39,8 +39,8 @@ BuildRequires:	cups-devel >= 1:1.6.0
 BuildRequires:	dbus-devel
 BuildRequires:	fontconfig-devel >= 2.0.0
 BuildRequires:	freetype-devel >= 2
+BuildRequires:	gettext-tools >= 0.18.3
 # /usr/bin/gs, for features detection
-%{?with_php:BuildRequires:	%{php_name}-devel}
 BuildRequires:	ghostscript
 BuildRequires:	glib2-devel >= 1:2.30.2
 BuildRequires:	lcms2-devel >= 2
@@ -52,6 +52,7 @@ BuildRequires:	libtiff-devel
 BuildRequires:	libtool
 BuildRequires:	openldap-devel
 %{?with_perl:BuildRequires:	perl-devel}
+%{?with_php:BuildRequires:	%{php_name}-devel}
 BuildRequires:	pkgconfig >= 1:0.20
 BuildRequires:	poppler-cpp-devel >= 0.19
 # /usr/bin/pdftops, for features detection
