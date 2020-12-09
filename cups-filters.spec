@@ -471,10 +471,12 @@ fi
 %{_pkgconfigdir}/libcupsfilters.pc
 %{_pkgconfigdir}/libfontembed.pc
 
+%if %{with static_libs}
 %files static
 %defattr(644,root,root,755)
 %{_libdir}/libcupsfilters.a
 %{_libdir}/libfontembed.a
+%endif
 
 %files -n cups-browsed
 %defattr(644,root,root,755)
