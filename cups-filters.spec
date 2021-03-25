@@ -58,6 +58,8 @@ BuildRequires:	poppler-cpp-devel >= 0.19
 BuildRequires:	poppler-progs >= 0.19
 BuildRequires:	qpdf-devel >= 8.3.0
 BuildRequires:	rpmbuild(macros) >= 1.671
+BuildRequires:	tar >= 1:1.22
+BuildRequires:	xz
 BuildRequires:	zlib-devel
 # DejaVuSans.ttf (testing font for test scripts)
 #BuildRequires:	fonts-TTF-DejaVu
