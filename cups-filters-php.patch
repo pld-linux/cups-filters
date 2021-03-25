@@ -11,7 +11,7 @@
  # =========
 --- cups-filters-1.0.41/Makefile.am.orig	2013-12-01 10:26:49.831484169 +0100
 +++ cups-filters-1.0.41/Makefile.am	2013-12-01 10:37:08.568124870 +0100
-@@ -696,7 +696,7 @@
+@@ -696,8 +696,8 @@
  	scripting/php/phpcups.c \
  	scripting/php/phpcups.h
  libphpcups_la_LIBADD = $(CUPS_LIBS)
@@ -20,7 +20,8 @@
 +libphpcups_la_CFLAGS = $(CUPS_CFLAGS) $(PHP_CFLAGS)
 +libphpcups_la_LDFLAGS = -module -avoid-version -shared -no-undefined
  
- 
+ EXTRA_DIST += \
+ 	scripting/perl \
 --- cups-filters-1.0.41/scripting/php/phpcups.c.orig	2012-06-22 18:10:47.000000000 +0200
 +++ cups-filters-1.0.41/scripting/php/phpcups.c	2013-12-01 10:50:16.171425151 +0100
 @@ -29,12 +29,16 @@

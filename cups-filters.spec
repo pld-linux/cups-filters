@@ -11,7 +11,7 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.28.7
+Version:	1.28.8
 Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
@@ -25,11 +25,10 @@ Release:	1
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
 Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	2efeed97e11ea5e157c5f4f2e0780fe7
-Patch0:		%{name}-dbus.patch
-Patch1:		%{name}-php.patch
-Patch2:		%{name}-php7.patch
-Patch3:		%{name}-php73.patch
+# Source0-md5:	914fb53d31ff8500dc25d2e2c68ca5c1
+Patch0:		%{name}-php.patch
+Patch1:		%{name}-php7.patch
+Patch2:		%{name}-php73.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake >= 1:1.11
@@ -248,7 +247,6 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 %build
 %{__aclocal}
