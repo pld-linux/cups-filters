@@ -24,7 +24,7 @@ Release:	1
 # MIT:     filters: gstoraster, pdftopdf, pdftoraster
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
-Source0:	http://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
+Source0:	https://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
 # Source0-md5:	914fb53d31ff8500dc25d2e2c68ca5c1
 Patch0:		%{name}-php.patch
 Patch1:		%{name}-php7.patch
