@@ -11,8 +11,8 @@
 Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
-Version:	1.28.16
-Release:	2
+Version:	1.28.17
+Release:	1
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -24,11 +24,14 @@ Release:	2
 # MIT:     filters: gstoraster, pdftopdf, pdftoraster
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
-Source0:	https://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
-# Source0-md5:	24bed15110499fd652d65d6baab85ca6
+#Source0:	https://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
+Source0:	https://github.com/OpenPrinting/cups-filters/releases/download/%{version}/%{name}-%{version}.tar.xz
+# Source0-md5:	74741eb5ba32331676f88be468259d1f
 Patch0:		%{name}-php.patch
 Patch1:		%{name}-php7.patch
 Patch2:		%{name}-php73.patch
+Patch3:		%{name}-1.28.17-c++17.patch
+Patch4:		%{name}-1.28.17-CVE-2023-24805.patch
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake >= 1:1.11
@@ -41,6 +44,7 @@ BuildRequires:	fonts-TTF-DejaVu
 BuildRequires:	freetype-devel >= 2
 BuildRequires:	gettext-tools >= 0.18.3
 # /usr/bin/gs, for features detection
+%{?with_php:BuildRequires:	%{php_name}-devel}
 BuildRequires:	ghostscript
 BuildRequires:	glib2-devel >= 1:2.30.2
 BuildRequires:	lcms2-devel >= 2
@@ -53,7 +57,6 @@ BuildRequires:	libtiff-devel
 BuildRequires:	libtool
 BuildRequires:	openldap-devel
 %{?with_perl:BuildRequires:	perl-devel}
-%{?with_php:BuildRequires:	%{php_name}-devel}
 BuildRequires:	pkgconfig >= 1:0.20
 BuildRequires:	poppler-cpp-devel >= 0.19
 # /usr/bin/pdftops, for features detection
@@ -251,8 +254,11 @@ Moduł PHP do ogólnego systemu druku dla Uniksa.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+%patch4 -p1
 
 %build
+export CXXFLAGS="%{rpmcxxflags} -std=c++17"
 %{__aclocal}
 %{__autoconf}
 %{__automake}
