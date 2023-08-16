@@ -52,7 +52,7 @@ BuildRequires:	libexif-devel
 BuildRequires:	libjpeg-devel
 %{?with_braille:BuildRequires:	liblouis-devel}
 BuildRequires:	libpng-devel
-BuildRequires:	libstdc++-devel >= 6:4.7
+BuildRequires:	libstdc++-devel >= 6:7
 BuildRequires:	libtiff-devel
 BuildRequires:	libtool
 BuildRequires:	openldap-devel
