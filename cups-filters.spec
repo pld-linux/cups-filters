@@ -2,7 +2,7 @@ Summary:	OpenPrinting CUPS filters and backends
 Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
 Version:	2.0.1
-Release:	1
+Release:	2
 # For a breakdown of the licensing, see COPYING file
 # GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
 #                   imagetopdf, pstopdf, texttopdf
@@ -10,7 +10,6 @@ Release:	1
 # GPLv2+:  filters: gstopxl, textonly, texttops, imagetops
 # GPLv3:   filters: bannertopdf
 # GPLv3+:  filters: urftopdf
-# LGPLv2+:   utils: cups-browsed
 # MIT:     filters: gstoraster, pdftopdf, pdftoraster
 License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
 Group:		Applications/Printing
@@ -71,7 +70,6 @@ Obsoletes:	foomatic-filters
 Obsoletes:	ghostscript-cups < 9.08
 Obsoletes:	cups-filters-braille < 2.0.1
 Obsoletes:	perl-cups < 2.0.1
-Obsoletes:	cups-browsed < 2.0.1
 Conflicts:	cups-backend-hp < 3.13.11-2
 Conflicts:	hplip-ppd < 3.13.11-2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
