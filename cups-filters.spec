@@ -19,49 +19,18 @@ Source0:	https://github.com/OpenPrinting/cups-filters/releases/download/%{versio
 URL:		http://www.linuxfoundation.org/collaborate/workgroups/openprinting/cups-filters
 BuildRequires:	autoconf >= 2.65
 BuildRequires:	automake >= 1:1.11
-BuildRequires:	avahi-devel
-BuildRequires:	avahi-glib-devel
 BuildRequires:	cups-devel >= 1:1.6.0
-BuildRequires:	dbus-devel
-BuildRequires:	fontconfig-devel >= 2.0.0
-BuildRequires:	fonts-TTF-DejaVu
-BuildRequires:	freetype-devel >= 2
 BuildRequires:	gettext-tools >= 0.18.3
-# /usr/bin/gs, for features detection
-BuildRequires:	ghostscript
-BuildRequires:	glib2-devel >= 1:2.30.2
-BuildRequires:	lcms2-devel >= 2
 BuildRequires:	libcupsfilters-devel
-BuildRequires:	libexif-devel
-BuildRequires:	libjpeg-devel
-BuildRequires:	libpng-devel
 BuildRequires:	libppd-devel
-BuildRequires:	libstdc++-devel >= 6:7
-BuildRequires:	libtiff-devel
 BuildRequires:	libtool
-BuildRequires:	openldap-devel
 BuildRequires:	pkgconfig >= 1:0.20
-BuildRequires:	poppler-cpp-devel >= 0.19
-# /usr/bin/pdftops, for features detection
-BuildRequires:	poppler-progs >= 0.19
-BuildRequires:	qpdf-devel >= 8.3.0
 BuildRequires:	rpmbuild(macros) >= 1.671
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
-BuildRequires:	zlib-devel
-# DejaVuSans.ttf (testing font for test scripts)
-#BuildRequires:	fonts-TTF-DejaVu
-# pstopdf
-Requires:	bc
 Requires:	cups >= 1:1.6.0
-Requires:	fontconfig >= 2.0.0
 Requires:	ghostscript
-Requires:	grep
 Requires:	mupdf
-Requires:	poppler >= 0.19
-Requires:	poppler-progs >= 0.19
-Requires:	qpdf-libs >= 8.3.0
-Requires:	sed
 Suggests:	fonts-TTF-freefont
 Provides:	cups-filter-foomatic
 Provides:	ghostscript-cups = 9.08
@@ -132,12 +101,11 @@ podłączonych do portów szeregowych.
 %build
 
 %configure \
-	--enable-dbus \
 	--disable-silent-rules \
 	%{!?with_static_libs:--disable-static} \
-	--with-pdftops=hybrid \
-	--with-mutool-path=/usr/bin/mutool \
-	--with-test-font-path=/usr/share/fonts/TTF/DejaVuSans.ttf
+	--with-gs-path=/usr/bin/gs \
+	--with-ippfind-path=/usr/bin/ippfind \
+	--with-mutool-path=/usr/bin/mutool
 
 %{__make}
 
