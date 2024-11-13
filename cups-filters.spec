@@ -3,15 +3,7 @@ Summary(pl.UTF-8):	Filtry i backendy CUPS-a z projektu OpenPrinting
 Name:		cups-filters
 Version:	2.0.1
 Release:	2
-# For a breakdown of the licensing, see COPYING file
-# GPLv2:   filters: commandto*, imagetoraster, pdftops, rasterto*,
-#                   imagetopdf, pstopdf, texttopdf
-#         backends: parallel, serial
-# GPLv2+:  filters: gstopxl, textonly, texttops, imagetops
-# GPLv3:   filters: bannertopdf
-# GPLv3+:  filters: urftopdf
-# MIT:     filters: gstoraster, pdftopdf, pdftoraster
-License:	GPL v2, GPL v2+, GPL v3, GPL v3+, LGPL v2+, MIT
+License:	Apache v2.0
 Group:		Applications/Printing
 #Source0:	https://www.openprinting.org/download/cups-filters/%{name}-%{version}.tar.xz
 Source0:	https://github.com/OpenPrinting/cups-filters/releases/download/%{version}/%{name}-%{version}.tar.xz
@@ -64,7 +56,6 @@ Summary:	Parallel port backend for CUPS
 Summary(pl.UTF-8):	Backend CUPS-a obsługujący porty równoległe
 # must be larger than cups.spec before 1.6.0
 Epoch:		2
-License:	GPL v2 + OpenSSL exception
 Group:		Applications/Printing
 Requires:	cups >= 1:1.6.0
 
@@ -81,7 +72,6 @@ Summary:	Serial port backend for CUPS
 Summary(pl.UTF-8):	Backend CUPS-a obsługujący porty szeregowe
 # must be larger than cups.spec before 1.6.0
 Epoch:		2
-License:	GPL v2 + OpenSSL exception
 Group:		Applications/Printing
 Requires:	cups >= 1:1.6.0
 
