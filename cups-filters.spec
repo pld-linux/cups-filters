@@ -15,7 +15,7 @@ BuildRequires:	cups-devel >= 1:1.6.0
 BuildRequires:	gettext-tools >= 0.18.3
 BuildRequires:	libcupsfilters-devel
 BuildRequires:	libppd-devel
-BuildRequires:	libtool
+BuildRequires:	libtool >= 2:2
 BuildRequires:	pkgconfig >= 1:0.20
 BuildRequires:	rpmbuild(macros) >= 1.671
 BuildRequires:	tar >= 1:1.22
@@ -89,7 +89,6 @@ podłączonych do portów szeregowych.
 %setup -q
 
 %build
-
 %configure \
 	--disable-silent-rules \
 	%{!?with_static_libs:--disable-static} \
@@ -113,7 +112,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING NEWS README.md
+%doc AUTHORS CHANGES*.md COPYING NOTICE README.md
 %attr(755,root,root) %{_bindir}/driverless
 %attr(755,root,root) %{_bindir}/driverless-fax
 %attr(755,root,root) %{_bindir}/foomatic-rip
